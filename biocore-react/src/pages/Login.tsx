@@ -1,13 +1,8 @@
 import React from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { Card, Form, Input, Button, message, Alert } from 'antd'
+import { Card, Form, Input, Button, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { login, saveAuth } from '../services/auth'
-
-const TEST_ACCOUNT = {
-  email: 'demo@biocore.com',
-  password: 'demo123'
-}
 
 const Login: React.FC = () => {
   const navigate = useNavigate()
@@ -29,13 +24,6 @@ const Login: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }
-
-  const fillTestAccount = () => {
-    form.setFieldsValue({
-      email: TEST_ACCOUNT.email,
-      password: TEST_ACCOUNT.password
-    })
   }
 
   return (
@@ -60,18 +48,17 @@ const Login: React.FC = () => {
             color: '#fff',
             fontSize: 24,
             fontWeight: 600
-          }}>B</div>
+          }}>
+            <svg width="30" height="44" viewBox="0 0 18 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 2C3 2 7 4 11 8C15 12 15 14 15 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <path d="M15 2C15 2 11 4 7 8C3 12 3 14 3 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <path d="M3 14C3 14 7 16 11 20C15 24 15 26 15 26" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <path d="M15 14C15 14 11 16 7 20C3 24 3 26 3 26" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+          </div>
           <h1 style={{ fontSize: 24, fontWeight: 600, marginBottom: 8 }}>BioCore</h1>
           <p style={{ color: '#8c8c8c' }}>生物信息分析平台</p>
         </div>
-
-        <Alert
-          message="测试账号"
-          description={<div>邮箱: <code>{TEST_ACCOUNT.email}</code> | 密码: <code>{TEST_ACCOUNT.password}</code><br /><Button size="small" onClick={fillTestAccount} style={{ marginTop: 8 }}>一键填充</Button></div>}
-          type="info"
-          showIcon
-          style={{ marginBottom: 16 }}
-        />
 
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Form.Item name="email" rules={[{ required: true, message: '请输入邮箱' }, { type: 'email', message: '请输入有效的邮箱地址' }]}>

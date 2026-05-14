@@ -2,6 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Card, Button, Space, Tag, Modal, Form, InputNumber, Select, Checkbox, Input, Divider, message } from 'antd'
 import { SaveOutlined, CheckCircleOutlined, PlayCircleOutlined, ThunderboltOutlined, SearchOutlined } from '@ant-design/icons'
+import '../styles/workflow-designer.css'
 
 interface ToolNode {
   id: string
@@ -13,8 +14,8 @@ interface ToolNode {
 }
 
 const categoryTools = [
-  { 
-    category: '序列处理', 
+  {
+    category: '序列处理',
     icon: '🔤',
     tools: [
       { id: 'fastqc', name: 'FastQC', icon: '📊', desc: '测序质量评估', color: '#667eea' },
@@ -71,7 +72,6 @@ const WorkflowDesigner: React.FC = () => {
     setIsConfigModalOpen(false)
   }
 
-  // 运行工作流并跳转到执行监控页面
   const onRunWorkflow = () => {
     const workflowInstance = {
       id: `wf_${Date.now()}`,
@@ -86,7 +86,6 @@ const WorkflowDesigner: React.FC = () => {
     }, 500)
   }
 
-  // 跳转到执行监控
   const goToExecute = () => {
     if (currentWorkflow) {
       navigate('/workflow-execute', { state: { workflow: currentWorkflow } })
@@ -96,18 +95,18 @@ const WorkflowDesigner: React.FC = () => {
   }
 
   return (
-    <div style={{ display: 'flex', gap: 16, height: 'calc(100vh - 150px)' }}>
-      <Card size="small" style={{ width: 240, overflow: 'auto' }} title={<><SearchOutlined /> 工具库</>}>
+    <div className="workflow-designer">
+      <Card size="small" className="tool-panel" title={<><SearchOutlined /> 工具库</>}>
         {categoryTools.map((cat) => (
           <div key={cat.category} style={{ marginBottom: 16 }}>
             <div style={{ fontWeight: 600, fontSize: 12, color: '#8c8c8c', marginBottom: 8 }}>
               {cat.icon} {cat.category}
             </div>
             {cat.tools.map((tool) => (
-              <Card 
-                key={tool.id} 
-                size="small" 
-                style={{ marginBottom: 8, cursor: 'grab', borderLeft: `3px solid ${tool.color}` }} 
+              <Card
+                key={tool.id}
+                size="small"
+                style={{ marginBottom: 8, cursor: 'grab', borderLeft: `3px solid ${tool.color}` }}
                 hoverable
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -123,11 +122,9 @@ const WorkflowDesigner: React.FC = () => {
         ))}
       </Card>
 
-      <Card 
-        style={{ flex: 1 }} 
-        title="工作流设计器" 
+      <Card className="canvas-panel" title="工作流设计器"
         extra={
-          <Space>
+          <Space wrap>
             <Button icon={<SaveOutlined />}>保存</Button>
             <Button icon={<CheckCircleOutlined />}>验证</Button>
             <Button type="primary" icon={<PlayCircleOutlined />} onClick={() => setIsRunModalOpen(true)}>运行</Button>
@@ -135,16 +132,10 @@ const WorkflowDesigner: React.FC = () => {
           </Space>
         }
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 24, overflowX: 'auto' }}>
+        <div className="workflow-nodes">
           {workflowNodes.map((node, index) => (
             <React.Fragment key={node.id}>
-              <Card 
-                style={{ 
-                  width: 180, 
-                  textAlign: 'center',
-                  borderTop: '3px solid #667eea'
-                }}
-              >
+              <Card className="node-card" style={{ borderTop: '3px solid #667eea' }}>
                 <div style={{ fontWeight: 600, marginBottom: 8 }}>{node.name}</div>
                 <Tag color={node.status === 'configured' ? 'green' : 'blue'} style={{ marginBottom: 8 }}>
                   {node.status === 'configured' ? '已配置' : '就绪'}
@@ -154,21 +145,19 @@ const WorkflowDesigner: React.FC = () => {
                 </div>
               </Card>
               {index < workflowNodes.length - 1 && (
-                <svg width="40" height="20">
-                  <path d="M0 10 L40 10" stroke="#d9d9d9" strokeWidth="2" markerEnd="url(#arrow)" />
-                  <defs>
-                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 0 L 10 5 L 0 10 z" fill="#d9d9d9" />
-                    </marker>
-                  </defs>
-                </svg>
+                <div className="node-arrow">
+                  <svg width="40" height="20">
+                    <path d="M0 10 L40 10" stroke="currentColor" strokeWidth="2" fill="none" />
+                    <path d="M32 6 L40 10 L32 14" stroke="currentColor" strokeWidth="2" fill="none" />
+                  </svg>
+                </div>
               )}
             </React.Fragment>
           ))}
         </div>
       </Card>
 
-      <Card size="small" style={{ width: 280 }} title="属性配置">
+      <Card size="small" className="property-panel" title="属性配置">
         <Form layout="vertical" form={form}>
           <Form.Item label="工作流名称">
             <Input defaultValue="WGS标准分析流程" />

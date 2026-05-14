@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import MainLayout from './layouts/MainLayout'
 import Dashboard from './pages/Dashboard'
 import Projects from './pages/Projects'
@@ -16,13 +16,18 @@ import Team from './pages/Team'
 import Settings from './pages/Settings'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import AuthGuard from './components/AuthGuard'
+import { isAuthenticated } from './services/auth'
 
 function App() {
+  const authenticated = isAuthenticated()
+  const location = useLocation()
+
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/" element={<MainLayout />}>
+      <Route path="/login" element={authenticated ? <Navigate to="/dashboard" state={{ from: location }} replace /> : <Login />} />
+      <Route path="/register" element={authenticated ? <Navigate to="/dashboard" state={{ from: location }} replace /> : <Register />} />
+      <Route path="/" element={<AuthGuard><MainLayout /></AuthGuard>}>
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="projects" element={<Projects />} />

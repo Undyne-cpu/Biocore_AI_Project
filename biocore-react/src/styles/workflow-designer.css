@@ -1,0 +1,148 @@
+/* 工作流设计器页面样式 */
+.workflow-designer {
+  display: flex;
+  gap: 16px;
+  height: calc(100vh - 150px);
+  overflow: hidden;
+}
+
+.workflow-designer .ant-card {
+  overflow: hidden;
+}
+
+.workflow-designer .tool-panel {
+  width: 240px;
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+
+.workflow-designer .tool-panel .ant-card-body {
+  padding: 12px;
+}
+
+.workflow-designer .canvas-panel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.workflow-designer .canvas-panel .ant-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.workflow-designer .workflow-nodes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 24px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-wrap: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.workflow-designer .workflow-nodes::-webkit-scrollbar {
+  height: 6px;
+}
+
+.workflow-designer .workflow-nodes::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 3px;
+}
+
+.workflow-designer .workflow-nodes::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 3px;
+}
+
+.workflow-designer .workflow-nodes::-webkit-scrollbar-thumb:hover {
+  background: #bfbfbf;
+}
+
+.workflow-designer .node-card {
+  width: 180px;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.workflow-designer .node-arrow {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d9d9d9;
+}
+
+.workflow-designer .property-panel {
+  width: 280px;
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+
+.workflow-designer .property-panel .ant-card-body {
+  padding: 12px;
+}
+
+/* 移动端适配 */
+@media (max-width: 1200px) {
+  .workflow-designer {
+    gap: 8px;
+  }
+
+  .workflow-designer .tool-panel {
+    width: 200px;
+  }
+
+  .workflow-designer .property-panel {
+    width: 240px;
+  }
+
+  .workflow-designer .node-card {
+    width: 160px;
+  }
+}
+
+@media (max-width: 992px) {
+  .workflow-designer {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  .workflow-designer .tool-panel {
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .workflow-designer .canvas-panel {
+    min-height: 300px;
+  }
+
+  .workflow-designer .property-panel {
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .workflow-designer .workflow-nodes {
+    padding: 16px;
+  }
+}
+
+/* 触摸设备优化 */
+@media (pointer: coarse) {
+  .workflow-designer .workflow-nodes {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: auto;
+  }
+
+  .workflow-designer .workflow-nodes::-webkit-scrollbar {
+    display: none;
+  }
+}

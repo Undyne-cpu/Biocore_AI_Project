@@ -53,7 +53,14 @@ const Register: React.FC = () => {
             color: '#fff',
             fontSize: 24,
             fontWeight: 600
-          }}>B</div>
+          }}>
+            <svg width="30" height="44" viewBox="0 0 18 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 2C3 2 7 4 11 8C15 12 15 14 15 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <path d="M15 2C15 2 11 4 7 8C3 12 3 14 3 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <path d="M3 14C3 14 7 16 11 20C15 24 15 26 15 26" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <path d="M15 14C15 14 11 16 7 20C3 24 3 26 3 26" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+          </div>
           <h1 style={{ fontSize: 24, fontWeight: 600, marginBottom: 8 }}>注册账号</h1>
           <p style={{ color: '#8c8c8c' }}>创建您的BioCore账号</p>
         </div>
