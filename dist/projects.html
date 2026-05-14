@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioCore - 项目列表</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边导航栏 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" stroke="url(#grad1)" stroke-width="3"/>
+                        <path d="M12 20 Q16 14, 20 20 T28 20" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <circle cx="14" cy="18" r="2" fill="#00D4AA"/>
+                        <circle cx="26" cy="18" r="2" fill="#00D4AA"/>
+                        <path d="M15 25 Q20 28, 25 25" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">BioCore</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="projects.html" class="nav-item active">
+                    <i class="fas fa-folder-open"></i>
+                    <span>项目</span>
+                </a>
+                <a href="data.html" class="nav-item">
+                    <i class="fas fa-database"></i>
+                    <span>数据管理</span>
+                </a>
+                
+                <a href="workflow-designer.html" class="nav-item">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>工作流</span>
+                </a>
+                <a href="visualize.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>可视化</span>
+                </a>
+                <a href="tools.html" class="nav-item">
+                    <i class="fas fa-wrench"></i>
+                    <span>工具</span>
+                </a>
+                <a href="results.html" class="nav-item">
+                    <i class="fas fa-file-medical"></i>
+                    <span>结果查看</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>报告中心</span>
+                </a>
+                <a href="team.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>团队管理</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </a>
+                <div class="user-profile">
+                    <div class="avatar">李</div>
+                    <div class="user-info">
+                        <span class="user-name">李博士</span>
+                        <span class="user-role">研究人员</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部栏 -->
+            <header class="topbar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="搜索项目名称、标签或描述...">
+                </div>
+                <div class="topbar-actions">
+                    <button class="action-btn" title="通知">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+                    <button class="action-btn" title="帮助">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 内容区域 -->
+            <div class="content">
+                <!-- 页面标题区 -->
+                <div class="page-header">
+                    <div class="page-title-section">
+                        <h1 class="page-title">
+                            <i class="fas fa-folder-open"></i>
+                            我的项目
+                        </h1>
+                        <p class="page-subtitle">共 <span id="projectCount">12</span> 个项目</p>
+                    </div>
+                    <button class="btn btn-primary" id="newProjectBtn">
+                        <i class="fas fa-plus"></i>
+                        新建项目
+                    </button>
+                </div>
+
+                <!-- 筛选工具栏 -->
+                <div class="filter-toolbar">
+                    <div class="filter-left">
+                        <div class="filter-group">
+                            <label>状态</label>
+                            <select id="statusFilter">
+                                <option value="all">全部状态</option>
+                                <option value="active">进行中</option>
+                                <option value="completed">已完成</option>
+                                <option value="archived">已归档</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>类型</label>
+                            <select id="typeFilter">
+                                <option value="all">全部类型</option>
+                                <option value="wgs">全基因组(WGS)</option>
+                                <option value="rna">转录组(RNA-seq)</option>
+                                <option value="chip">ChIP-seq</option>
+                                <option value="meta">宏基因组</option>
+                                <option value="wes">全外显子(WES)</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>排序</label>
+                            <select id="sortFilter">
+                                <option value="updated">最近更新</option>
+                                <option value="created">创建时间</option>
+                                <option value="name">名称</option>
+                                <option value="size">数据量</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-right">
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="grid" title="网格视图">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button class="view-btn" data-view="list" title="列表视图">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 标签筛选 -->
+                <div class="tag-filter">
+                    <span class="tag-label">标签:</span>
+                    <div class="tags-container">
+                        <button class="tag active" data-tag="all">全部</button>
+                        <button class="tag" data-tag="肿瘤">肿瘤</button>
+                        <button class="tag" data-tag="免疫">免疫</button>
+                        <button class="tag" data-tag="微生物">微生物</button>
+                        <button class="tag" data-tag="植物">植物</button>
+                        <button class="tag" data-tag="药物">药物研发</button>
+                        <button class="tag" data-tag="神经">神经科学</button>
+                    </div>
+                </div>
+
+                <!-- 项目列表（网格视图） -->
+                <div class="projects-grid" id="projectsGrid">
+                    <!-- 项目卡片会通过JavaScript动态生成 -->
+                </div>
+
+                <!-- 分页导航 -->
+                <div class="pagination">
+                    <div class="pagination-info">
+                        显示 <span id="startNum">1</span>-<span id="endNum">12</span> 共 <span id="totalNum">12</span> 个
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="page-btn" id="prevPage" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <span class="page-ellipsis">...</span>
+                        <button class="page-btn">10</button>
+                        <button class="page-btn" id="nextPage">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="pagination-size">
+                        <label>每页</label>
+                        <select id="pageSize">
+                            <option value="12" selected>12</option>
+                            <option value="24">24</option>
+                            <option value="48">48</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 新建项目模态框 -->
+    <div class="modal-overlay" id="newProjectModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-plus"></i> 新建项目</h2>
+                <button class="modal-close" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>项目名称 <span class="required">*</span></label>
+                    <input type="text" id="projectName" placeholder="输入项目名称">
+                </div>
+                <div class="form-group">
+                    <label>项目描述</label>
+                    <textarea id="projectDesc" rows="3" placeholder="简要描述项目内容"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>分析类型</label>
+                        <select id="projectType">
+                            <option value="wgs">全基因组测序 (WGS)</option>
+                            <option value="rna">转录组测序 (RNA-seq)</option>
+                            <option value="chip">ChIP-seq</option>
+                            <option value="wes">全外显子测序 (WES)</option>
+                            <option value="meta">宏基因组</option>
+                            <option value="atac">ATAC-seq</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>可见性</label>
+                        <select id="projectVisibility">
+                            <option value="private">私有</option>
+                            <option value="team">团队可见</option>
+                            <option value="public">公开</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>标签</label>
+                    <div class="tags-input-container">
+                        <div class="selected-tags" id="selectedTags"></div>
+                        <input type="text" id="tagInput" placeholder="添加标签（回车确认）">
+                    </div>
+                    <div class="tag-suggestions">
+                        <span>建议标签:</span>
+                        <button class="tag-suggestion" data-tag="肿瘤">肿瘤</button>
+                        <button class="tag-suggestion" data-tag="免疫">免疫</button>
+                        <button class="tag-suggestion" data-tag="微生物">微生物</button>
+                        <button class="tag-suggestion" data-tag="药物">药物研发</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelBtn">取消</button>
+                <button class="btn btn-primary" id="createBtn">
+                    <i class="fas fa-check"></i> 创建项目
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 删除确认模态框 -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal modal-small">
+            <div class="modal-header">
+                <h2><i class="fas fa-exclamation-triangle"></i> 确认删除</h2>
+                <button class="modal-close" onclick="closeDeleteModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>确定要删除项目 "<span id="deleteProjectName"></span>" 吗？</p>
+                <p class="warning-text">此操作不可恢复，所有相关数据将被永久删除。</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">取消</button>
+                <button class="btn btn-danger" id="confirmDelete">
+                    <i class="fas fa-trash"></i> 删除
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

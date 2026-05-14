@@ -1,0 +1,44 @@
+:root {
+  --primary: #667eea;
+  --secondary: #764ba2;
+  --accent: #00D4AA;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f7fa;
+  --bg-hover: #f0f2f5;
+  --text-primary: #1a1a2e;
+  --text-secondary: #6c757d;
+  --text-muted: #a0a0a0;
+  --border: #e4e7eb;
+  --success: #52c41a;
+  --warning: #faad14;
+  --error: #ff4d4f;
+  --sidebar-width: 240px;
+  --topbar-height: 64px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Ant Design覆盖 */
+.ant-layout {
+  background: var(--bg-secondary) !important;
+}
+
+.ant-menu-dark {
+  background: transparent !important;
+}

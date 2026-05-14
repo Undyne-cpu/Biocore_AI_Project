@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioCore - 工作流执行</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边导航栏 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" stroke="url(#grad1)" stroke-width="3"/>
+                        <path d="M12 20 Q16 14, 20 20 T28 20" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <circle cx="14" cy="18" r="2" fill="#00D4AA"/>
+                        <circle cx="26" cy="18" r="2" fill="#00D4AA"/>
+                        <path d="M15 25 Q20 28, 25 25" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">BioCore</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="projects.html" class="nav-item">
+                    <i class="fas fa-folder-open"></i>
+                    <span>项目</span>
+                </a>
+                <a href="data.html" class="nav-item">
+                    <i class="fas fa-database"></i>
+                    <span>数据管理</span>
+                </a>
+                
+                <a href="workflow-designer.html" class="nav-item active">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>工作流</span>
+                </a>
+                <a href="visualize.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>可视化</span>
+                </a>
+                <a href="tools.html" class="nav-item">
+                    <i class="fas fa-wrench"></i>
+                    <span>工具</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>报告中心</span>
+                </a>
+                <a href="team.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>团队管理</span>
+                </a>
+                <a href="results.html" class="nav-item">
+                    <i class="fas fa-file-medical"></i>
+                    <span>结果查看</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </a>
+                <div class="user-profile">
+                    <div class="avatar">李</div>
+                    <div class="user-info">
+                        <span class="user-name">李博士</span>
+                        <span class="user-role">研究人员</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部栏 -->
+            <header class="topbar">
+                <div class="breadcrumb">
+                    <a href="projects.html">项目</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span>全基因组测序分析</span>
+                    <i class="fas fa-chevron-right"></i>
+                    <span class="current">工作流执行</span>
+                </div>
+                <div class="topbar-actions">
+                    <button class="action-btn" title="重新运行">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                    <button class="action-btn" title="停止">
+                        <i class="fas fa-stop"></i>
+                    </button>
+                    <button class="action-btn" title="下载日志">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 内容区域 -->
+            <div class="content">
+                <!-- 执行概览 -->
+                <div class="execution-header">
+                    <div class="execution-info">
+                        <div class="execution-title">
+                            <h1>
+                                <i class="fas fa-play-circle"></i>
+                                WGS标准分析流程 - 执行中
+                            </h1>
+                            <div class="execution-meta">
+                                <span class="exec-id">ID: wf-20240511-001</span>
+                                <span class="exec-time">
+                                    <i class="fas fa-clock"></i>
+                                    已运行 45 分钟
+                                </span>
+                                <span class="exec-user">
+                                    <i class="fas fa-user"></i>
+                                    李博士
+                                </span>
+                            </div>
+                        </div>
+                        <div class="execution-progress-large">
+                            <div class="progress-ring-large">
+                                <svg viewBox="0 0 120 120">
+                                    <circle class="ring-bg" cx="60" cy="60" r="54" />
+                                    <circle class="ring-progress" cx="60" cy="60" r="54" stroke-dasharray="339.3" stroke-dashoffset="84.8" />
+                                </svg>
+                                <div class="progress-text">
+                                    <span class="percent">75%</span>
+                                    <span class="label">完成</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="execution-actions">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-pause"></i>
+                            暂停
+                        </button>
+                        <button class="btn btn-danger">
+                            <i class="fas fa-stop"></i>
+                            停止
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 执行状态流程 -->
+                <div class="execution-flow">
+                    <div class="flow-step completed" id="step1">
+                        <div class="step-indicator">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="step-info">
+                            <span class="step-name">1. 质量控制</span>
+                            <span class="step-tool">FastQC</span>
+                        </div>
+                        <div class="step-time">
+                            <i class="fas fa-clock"></i>
+                            3分钟
+                        </div>
+                        <div class="step-actions">
+<button class="step-btn" title="查看日志"><i class="fas fa-file-alt"></i></button>
+                            <button class="step-btn" title="查看输出"><i class="fas fa-external-link-alt"></i></button>
+                        </div>
+                    </div>
+                    <div class="flow-connector completed">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    <div class="flow-step completed" id="step2">
+                        <div class="step-indicator">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="step-info">
+                            <span class="step-name">2. 序列比对</span>
+                            <span class="step-tool">BWA-MEM</span>
+                        </div>
+                        <div class="step-time">
+                            <i class="fas fa-clock"></i>
+                            25分钟
+                        </div>
+                        <div class="step-actions">
+                            <button class="step-btn" title="查看日志"><i class="fas fa-file-alt"></i></button>
+                            <button class="step-btn" title="查看输出"><i class="fas fa-external-link-alt"></i></button>
+                        </div>
+                    </div>
+                    <div class="flow-connector active">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    <div class="flow-step running" id="step3">
+                        <div class="step-indicator">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="step-info">
+                            <span class="step-name">3. 变异检测</span>
+                            <span class="step-tool">GATK HaplotypeCaller</span>
+                            <div class="step-progress-bar">
+                                <div class="progress-fill" style="width: 65%;"></div>
+                            </div>
+                            <span class="step-progress-text">65% - 预计剩余 15 分钟</span>
+                        </div>
+                        <div class="step-time">
+                            <i class="fas fa-clock"></i>
+                            进行中
+                        </div>
+                        <div class="step-actions">
+                            <button class="step-btn" title="查看日志"><i class="fas fa-file-alt"></i></button>
+                            <button class="step-btn" title="查看输出"><i class="fas fa-external-link-alt"></i></button>
+                        </div>
+                    </div>
+                    <div class="flow-connector pending">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    <div class="flow-step pending" id="step4">
+                        <div class="step-indicator">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="step-info">
+                            <span class="step-name">4. 变异注释</span>
+                            <span class="step-tool">ANNOVAR</span>
+                        </div>
+                        <div class="step-time">
+                            <i class="fas fa-clock"></i>
+                            等待中
+                        </div>
+                        <div class="step-actions">
+                            <button class="step-btn" title="查看日志" disabled><i class="fas fa-file-alt"></i></button>
+                            <button class="step-btn" title="查看输出" disabled><i class="fas fa-external-link-alt"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 双列布局 -->
+                <div class="two-column execution-columns">
+                    <!-- 左侧: 任务详情 -->
+                    <div class="execution-main">
+                        <!-- 当前任务详情 -->
+                        <div class="detail-card">
+                            <div class="card-header">
+                                <h3>
+                                    <i class="fas fa-tasks"></i>
+                                    当前任务详情
+                                </h3>
+                                <span class="status-badge running">运行中</span>
+                            </div>
+                            <div class="task-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">任务名称</span>
+                                    <span class="detail-value">GATK HaplotypeCaller - 样本变异检测</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">输入文件</span>
+                                    <span class="detail-value">
+                                        <span class="file-link">sample.bam</span>
+                                        <span class="file-link">reference.fa</span>
+                                    </span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">开始时间</span>
+                                    <span class="detail-value">2024-05-11 16:16:32</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">运行时间</span>
+                                    <span class="detail-value">15 分钟 23 秒</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">CPU使用</span>
+                                    <div class="resource-bar">
+                                        <div class="resource-fill cpu" style="width: 78%;"></div>
+                                        <span class="resource-value">78%</span>
+                                    </div>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">内存使用</span>
+                                    <div class="resource-bar">
+                                        <div class="resource-fill memory" style="width: 62%;"></div>
+                                        <span class="resource-value">6.2 GB / 16 GB</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 实时日志 -->
+                        <div class="log-card">
+                            <div class="card-header">
+                                <h3>
+                                    <i class="fas fa-terminal"></i>
+                                    实时日志
+                                </h3>
+                                <div class="log-controls">
+                                    <button class="log-btn active" id="autoScrollBtn">
+                                        <i class="fas fa-arrow-down"></i>
+                                        自动滚动
+                                    </button>
+                                    <button class="log-btn" id="clearLogBtn">
+                                        <i class="fas fa-trash"></i>
+                                        清空
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="log-content" id="logContent">
+                                <div class="log-line info">[16:01:32] INFO - 任务启动</div>
+                                <div class="log-line info">[16:01:33] INFO - 加载输入文件: sample.bam (2.3 GB)</div>
+                                <div class="log-line info">[16:01:35] INFO - 加载参考基因组: GRCh38</div>
+                                <div class="log-line info">[16:01:40] INFO - 开始序列分析...</div>
+                                <div class="log-line info">[16:02:15] INFO - 已处理 1,000,000 条 reads</div>
+                                <div class="log-line info">[16:02:45] INFO - 已处理 2,000,000 条 reads</div>
+                                <div class="log-line info">[16:03:20] INFO - 已处理 3,000,000 条 reads</div>
+                                <div class="log-line warning">[16:04:05] WARN - 某些区域的覆盖度较低</div>
+                                <div class="log-line info">[16:05:30] INFO - 已处理 5,000,000 条 reads (50%)</div>
+                                <div class="log-line info">[16:06:10] INFO - 已处理 6,000,000 条 reads</div>
+                                <div class="log-line info">[16:07:45] INFO - 已处理 7,000,000 条 reads</div>
+                                <div class="log-line info">[16:08:20] INFO - 已处理 8,000,000 条 reads</div>
+                                <div class="log-line info">[16:09:55] INFO - 已处理 9,000,000 条 reads (90%)</div>
+                                <div class="log-line info">[16:10:30] INFO - 分析完成，正在生成结果...</div>
+                                <div class="log-line success">[16:10:45] SUCCESS - 任务完成</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 右侧: 资源监控和历史 -->
+                    <div class="execution-sidebar">
+                        <!-- 资源监控 -->
+                        <div class="monitor-card">
+                            <div class="card-header">
+                                <h3>
+                                    <i class="fas fa-chart-area"></i>
+                                    资源监控
+                                </h3>
+                            </div>
+                            <div class="monitor-stats">
+                                <div class="monitor-stat">
+                                    <div class="stat-header">
+                                        <span class="stat-icon cpu"><i class="fas fa-microchip"></i></span>
+                                        <span class="stat-label">CPU</span>
+                                        <span class="stat-value">78%</span>
+                                    </div>
+                                    <div class="stat-bar">
+                                        <div class="stat-fill cpu" style="width: 78%;"></div>
+                                    </div>
+                                </div>
+                                <div class="monitor-stat">
+                                    <div class="stat-header">
+                                        <span class="stat-icon memory"><i class="fas fa-memory"></i></span>
+                                        <span class="stat-label">内存</span>
+                                        <span class="stat-value">6.2 GB</span>
+                                    </div>
+                                    <div class="stat-bar">
+                                        <div class="stat-fill memory" style="width: 62%;"></div>
+                                    </div>
+                                </div>
+                                <div class="monitor-stat">
+                                    <div class="stat-header">
+                                        <span class="stat-icon disk"><i class="fas fa-hdd"></i></span>
+                                        <span class="stat-label">磁盘</span>
+                                        <span class="stat-value">12.5 GB</span>
+                                    </div>
+                                    <div class="stat-bar">
+                                        <div class="stat-fill disk" style="width: 45%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="monitor-chart">
+                                <div class="chart-placeholder">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span>CPU使用趋势</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 执行历史 -->
+                        <div class="history-card">
+                            <div class="card-header">
+                                <h3>
+                                    <i class="fas fa-history"></i>
+                                    执行历史
+                                </h3>
+                            </div>
+                            <div class="history-list">
+                                <div class="history-item">
+                                    <div class="history-status success">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="history-info">
+                                        <span class="history-name">WGS标准分析流程 v1.0</span>
+                                        <span class="history-meta">2024-05-10 · 1小时32分 · 成功</span>
+                                    </div>
+                                    <button class="history-action" title="查看详情">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="history-item">
+                                    <div class="history-status success">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="history-info">
+                                        <span class="history-name">WGS标准分析流程 v0.9</span>
+                                        <span class="history-meta">2024-05-08 · 1小时45分 · 成功</span>
+                                    </div>
+                                    <button class="history-action" title="查看详情">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="history-item">
+                                    <div class="history-status error">
+                                        <i class="fas fa-times-circle"></i>
+                                    </div>
+                                    <div class="history-info">
+                                        <span class="history-name">WGS标准分析流程 v0.8</span>
+                                        <span class="history-meta">2024-05-05 · 失败 · 内存不足</span>
+                                    </div>
+                                    <button class="history-action" title="查看详情">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 快捷操作 -->
+                        <div class="quick-actions-card">
+                            <div class="card-header">
+                                <h3>
+                                    <i class="fas fa-bolt"></i>
+                                    快捷操作
+                                </h3>
+</div>
+                            <div class="quick-actions">
+                                <button class="quick-action-btn">
+                                    <i class="fas fa-pause"></i>
+                                    <span>暂停任务</span>
+                                </button>
+                                <button class="quick-action-btn">
+                                    <i class="fas fa-redo"></i>
+                                    <span>重新运行</span>
+                                </button>
+                                <button class="quick-action-btn">
+                                    <i class="fas fa-clone"></i>
+                                    <span>复制工作流</span>
+                                </button>
+                                <button class="quick-action-btn">
+                                    <i class="fas fa-share-alt"></i>
+                                    <span>分享结果</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 日志查看模态框 -->
+    <div class="modal-overlay" id="logModal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h2><i class="fas fa-file-alt"></i> 查看日志</h2>
+                <button class="modal-close" id="closeLogModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="log-filters">
+                    <select id="logLevelFilter">
+                        <option value="all">全部级别</option>
+                        <option value="info">INFO</option>
+                        <option value="warning">WARNING</option>
+                        <option value="error">ERROR</option>
+                    </select>
+                    <input type="text" id="logSearchInput" placeholder="搜索日志内容...">
+                    <button class="btn btn-sm">
+                        <i class="fas fa-download"></i>
+                        导出日志
+                    </button>
+                </div>
+                <div class="full-log-content">
+                    <pre>[2024-05-11 16:01:32] INFO - ========================================
+[2024-05-11 16:01:32] INFO - BioCore Workflow Engine v2.0.0
+[2024-05-11 16:01:32] INFO - ========================================
+[2024-05-11 16:01:32] INFO - Loading workflow: WGS标准分析流程
+[2024-05-11 16:01:33] INFO - Loading input file: sample.bam (2.3 GB)
+[2024-05-11 16:01:35] INFO - Loading reference genome: GRCh38 (3.1 GB)
+[2024-05-11 16:01:40] INFO - Initializing GATK HaplotypeCaller
+[2024-05-11 16:01:42] INFO - Setting parameters:
+[2024-05-11 16:01:42] INFO -   -ploidy: 2
+[2024-05-11 16:01:42] INFO -   -ERC: GVCF
+[2024-05-11 16:01:42] INFO -   -stand_call_conf: 30.0
+[2024-05-11 16:01:42] INFO -   -stand_emit_conf: 30.0
+[2024-05-11 16:01:45] INFO - Starting variant calling...
+[2024-05-11 16:02:15] INFO - Processed 1,000,000 reads
+[2024-05-11 16:02:45] INFO - Processed 2,000,000 reads
+[2024-05-11 16:03:20] INFO - Processed 3,000,000 reads
+[2024-05-11 16:04:05] WARN - Low coverage detected in region chr1:1000000-1050000
+[2024-05-11 16:05:30] INFO - Processed 5,000,000 reads (50%)
+[2024-05-11 16:06:10] INFO - Processed 6,000,000 reads
+[2024-05-11 16:07:45] INFO - Processed 7,000,000 reads
+[2024-05-11 16:08:20] INFO - Processed 8,000,000 reads
+[2024-05-11 16:09:55] INFO - Processed 9,000,000 reads (90%)
+[2024-05-11 16:10:30] INFO - Finalizing results...
+[2024-05-11 16:10:45] INFO - ========================================
+[2024-05-11 16:10:45] INFO - Variant calling completed successfully
+[2024-05-11 16:10:45] INFO - Output file: variants.vcf (156 MB)
+[2024-05-11 16:10:45] INFO - Total variants: 125,432
+[2024-05-11 16:10:45] INFO - ========================================</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 停止确认模态框 -->
+    <div class="modal-overlay" id="stopModal">
+        <div class="modal modal-small">
+            <div class="modal-header">
+                <h2><i class="fas fa-exclamation-triangle"></i> 确认停止</h2>
+                <button class="modal-close" id="closeStopModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>确定要停止当前工作流执行吗？</p>
+                <p class="warning-text">已完成的步骤结果将被保留，但当前运行的步骤将被中断。</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelStop">取消</button>
+                <button class="btn btn-danger" id="confirmStop">
+                    <i class="fas fa-stop"></i> 确认停止
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // 工作流执行页面逻辑
+        document.addEventListener('DOMContentLoaded', function() {
+            // 日志查看
+            document.querySelectorAll('.step-btn').forEach(btn => {
+                if (btn.querySelector('.fa-file-alt')) {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        document.getElementById('logModal').classList.add('active');
+                    });
+                }
+            });
+
+            document.getElementById('closeLogModal').addEventListener('click', function() {
+                document.getElementById('logModal').classList.remove('active');
+            });
+
+            // 自动滚动
+            const autoScrollBtn = document.getElementById('autoScrollBtn');
+            const logContent = document.getElementById('logContent');
+            
+            autoScrollBtn.addEventListener('click', function() {
+                this.classList.toggle('active');
+                if (this.classList.contains('active')) {
+                    logContent.scrollTop = logContent.scrollHeight;
+                }
+            });
+
+            // 清空日志
+            document.getElementById('clearLogBtn').addEventListener('click', function() {
+                logContent.innerHTML = '<div class="log-line info">[16:16:32] INFO - 日志已清空</div>';
+            });
+
+            // 停止确认
+            const stopBtn = document.querySelector('.btn-danger');
+            const stopModal = document.getElementById('stopModal');
+
+            if (stopBtn) {
+                stopBtn.addEventListener('click', function() {
+                    stopModal.classList.add('active');
+                });
+            }
+
+            document.getElementById('closeStopModal').addEventListener('click', function() {
+                stopModal.classList.remove('active');
+            });
+
+            document.getElementById('cancelStop').addEventListener('click', function() {
+                stopModal.classList.remove('active');
+            });
+
+            document.getElementById('confirmStop').addEventListener('click', function() {
+                stopModal.classList.remove('active');
+                // 停止逻辑
+            });
+
+            // 暂停按钮
+            const pauseBtn = document.querySelector('.btn-secondary');
+            if (pauseBtn && pauseBtn.querySelector('.fa-pause')) {
+                pauseBtn.addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('fa-pause')) {
+                        icon.classList.remove('fa-pause');
+                        icon.classList.add('fa-play');
+                        this.innerHTML = '<i class="fas fa-play"></i> 继续';
+                    } else {
+                        icon.classList.remove('fa-play');
+                        icon.classList.add('fa-pause');
+                        this.innerHTML = '<i class="fas fa-pause"></i> 暂停';
+                    }
+                });
+            }
+
+            // 模拟日志更新
+            let logIndex = 16;
+            setInterval(function() {
+                if (document.getElementById('autoScrollBtn').classList.contains('active')) {
+                    logIndex++;
+                    const newLog = document.createElement('div');
+                    newLog.className = 'log-line info';
+                    newLog.textContent = `[16:${logIndex.toString().padStart(2, '0')}:00] INFO - 处理中...`;
+                    logContent.appendChild(newLog);
+                    logContent.scrollTop = logContent.scrollHeight;
+                }
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

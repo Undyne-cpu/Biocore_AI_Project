@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioCore - 生物信息分析平台</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边导航栏 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" stroke="url(#grad1)" stroke-width="3"/>
+                        <path d="M12 20 Q16 14, 20 20 T28 20" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <circle cx="14" cy="18" r="2" fill="#00D4AA"/>
+                        <circle cx="26" cy="18" r="2" fill="#00D4AA"/>
+                        <path d="M15 25 Q20 28, 25 25" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">BioCore</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="projects.html" class="nav-item">
+                    <i class="fas fa-folder-open"></i>
+                    <span>项目</span>
+                </a>
+                <a href="data.html" class="nav-item">
+                    <i class="fas fa-database"></i>
+                    <span>数据管理</span>
+                </a>
+                
+                <a href="workflow-designer.html" class="nav-item">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>工作流</span>
+                </a>
+                <a href="visualize.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>可视化</span>
+                </a>
+                <a href="tools.html" class="nav-item">
+                    <i class="fas fa-wrench"></i>
+                    <span>工具</span>
+                </a>
+                <a href="results.html" class="nav-item">
+                    <i class="fas fa-file-medical"></i>
+                    <span>结果查看</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>报告中心</span>
+                </a>
+                <a href="team.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>团队管理</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </a>
+                <div class="user-profile">
+                    <div class="avatar">李</div>
+                    <div class="user-info">
+                        <span class="user-name">李博士</span>
+                        <span class="user-role">研究人员</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部栏 -->
+            <header class="topbar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="搜索项目、数据或工具...">
+                </div>
+                <div class="topbar-actions">
+                    <button class="action-btn" title="通知">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+                    <button class="action-btn" title="帮助">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 内容区域 -->
+            <div class="content">
+                <!-- 欢迎横幅 -->
+                <section class="hero-section">
+                    <div class="hero-content">
+                        <h1>欢迎回来，李博士</h1>
+                        <p>您有 <strong>2</strong> 个任务正在运行，<strong>5</strong> 个新消息</p>
+                    </div>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            新建项目
+                        </button>
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-upload"></i>
+                            上传数据
+                        </button>
+                    </div>
+                </section>
+
+                <!-- 统计卡片 -->
+                <section class="stats-section">
+                    <div class="stat-card">
+                        <div class="stat-icon projects">
+                            <i class="fas fa-folder"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value">12</span>
+                            <span class="stat-label">项目总数</span>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i> 20%
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon data">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value">256</span>
+                            <span class="stat-label">数据集 (GB)</span>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i> 15%
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon tasks">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value">48</span>
+                            <span class="stat-label">已完成任务</span>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i> 32%
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon running">
+                            <i class="fas fa-spinner"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value">2</span>
+                            <span class="stat-label">运行中任务</span>
+                        </div>
+                        <div class="stat-status running">
+                            进行中
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 快捷入口 -->
+                <section class="quick-access-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-bolt"></i>
+                        快捷入口
+                    </h2>
+                    <div class="quick-cards">
+                        <div class="quick-card">
+                            <div class="quick-icon fastqc">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <span class="quick-title">质量控制</span>
+                            <span class="quick-desc">FastQC分析</span>
+                        </div>
+                        <div class="quick-card">
+                            <div class="quick-icon alignment">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            <span class="quick-title">序列比对</span>
+                            <span class="quick-desc">BWA/GATK</span>
+                        </div>
+                        <div class="quick-card">
+                            <div class="quick-icon variant">
+                                <i class="fas fa-dna"></i>
+                            </div>
+                            <span class="quick-title">变异检测</span>
+                            <span class="quick-desc">SNP/Indel</span>
+                        </div>
+                        <div class="quick-card">
+                            <div class="quick-icon expression">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <span class="quick-title">表达分析</span>
+                            <span class="quick-desc">RNA-seq</span>
+                        </div>
+                        <div class="quick-card">
+                            <div class="quick-icon annotation">
+                                <i class="fas fa-tag"></i>
+                            </div>
+                            <span class="quick-title">功能注释</span>
+                            <span class="quick-desc">GO/KEGG</span>
+                        </div>
+                        <div class="quick-card" onclick="location.href='workflow-designer.html'">
+                            <div class="quick-icon workflow">
+                                <i class="fas fa-stream"></i>
+                            </div>
+                            <span class="quick-title">工作流</span>
+                            <span class="quick-desc">自定义Pipeline</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 双列布局 -->
+                <div class="two-column">
+                    <!-- 最近项目 -->
+                    <section class="recent-projects">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                <i class="fas fa-folder-open"></i>
+                                最近项目
+                            </h2>
+                            <a href="#" class="view-all">查看全部 <i class="fas fa-chevron-right"></i></a>
+                        </div>
+                        <div class="project-list">
+                            <div class="project-item">
+                                <div class="project-icon wgs">
+                                    <i class="fas fa-dna"></i>
+                                </div>
+                                <div class="project-info">
+                                    <span class="project-name">全基因组测序分析</span>
+                                    <span class="project-meta">WGS-2024-001 · 更新于 2小时前</span>
+                                </div>
+                                <div class="project-status completed">已完成</div>
+                                <div class="project-actions">
+                                    <button class="icon-btn" title="打开"><i class="fas fa-folder-open"></i></button>
+                                </div>
+                            </div>
+                            <div class="project-item">
+                                <div class="project-icon rna">
+                                    <i class="fas fa-rna"></i>
+                                </div>
+                                <div class="project-info">
+                                    <span class="project-name">肝癌RNA-seq差异表达</span>
+                                    <span class="project-meta">RNA-2024-015 · 更新于 昨天</span>
+                                </div>
+                                <div class="project-status processing">分析中</div>
+                                <div class="project-actions">
+                                    <button class="icon-btn" title="打开"><i class="fas fa-folder-open"></i></button>
+                                </div>
+                            </div>
+                            <div class="project-item">
+                                <div class="project-icon chip">
+                                    <i class="fas fa-project-diagram"></i>
+                                </div>
+                                <div class="project-info">
+                                    <span class="project-name">ChIP-seq调控网络</span>
+                                    <span class="project-meta">CHIP-2024-008 · 更新于 3天前</span>
+                                </div>
+                                <div class="project-status completed">已完成</div>
+                                <div class="project-actions">
+                                    <button class="icon-btn" title="打开"><i class="fas fa-folder-open"></i></button>
+                                </div>
+                            </div>
+                            <div class="project-item">
+                                <div class="project-icon meta">
+                                    <i class="fas fa-microscope"></i>
+                                </div>
+                                <div class="project-info">
+                                    <span class="project-name">肠道微生物组分析</span>
+                                    <span class="project-meta">META-2024-022 · 更新于 1周前</span>
+                                </div>
+                                <div class="project-status draft">草稿</div>
+                                <div class="project-actions">
+                                    <button class="icon-btn" title="打开"><i class="fas fa-folder-open"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 运行中的任务 -->
+                    <section class="running-tasks">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                运行中的任务
+                            </h2>
+                            <a href="#" class="view-all">任务历史 <i class="fas fa-chevron-right"></i></a>
+                        </div>
+                        <div class="task-list">
+                            <div class="task-item">
+                                <div class="task-progress-ring">
+                                    <svg viewBox="0 0 36 36">
+                                        <path class="ring-bg" d="M18 2.0845
+                                            a 15.9155 15.9155 0 0 1 0 31.831
+                                            a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                        <path class="ring-progress" stroke-dasharray="65, 100" d="M18 2.0845
+                                            a 15.9155 15.9155 0 0 1 0 31.831
+                                            a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                    </svg>
+                                    <span class="progress-text">65%</span>
+                                </div>
+                                <div class="task-info">
+                                    <span class="task-name">差异表达分析</span>
+                                    <span class="task-step">步骤 3/5: DESeq2分析</span>
+                                    <span class="task-time"><i class="fas fa-clock"></i> 预计剩余 12 分钟</span>
+                                </div>
+                                <div class="task-actions">
+                                    <a href="workflow-execute.html" class="icon-btn" title="查看执行"><i class="fas fa-eye"></i></a>
+                                    <button class="icon-btn" title="暂停"><i class="fas fa-pause"></i></button>
+                                    <button class="icon-btn" title="停止"><i class="fas fa-stop"></i></button>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <div class="task-progress-ring">
+                                    <svg viewBox="0 0 36 36">
+                                        <path class="ring-bg" d="M18 2.0845
+                                            a 15.9155 15.9155 0 0 1 0 31.831
+                                            a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                        <path class="ring-progress" stroke-dasharray="30, 100" d="M18 2.0845
+                                            a 15.9155 15.9155 0 0 1 0 31.831
+                                            a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                    </svg>
+                                    <span class="progress-text">30%</span>
+                                </div>
+                                <div class="task-info">
+                                    <span class="task-name">变异注释流程</span>
+                                    <span class="task-step">步骤 1/4: ANNOVAR注释</span>
+                                    <span class="task-time"><i class="fas fa-clock"></i> 预计剩余 28 分钟</span>
+                                </div>
+                                <div class="task-actions">
+                                    <a href="workflow-execute.html" class="icon-btn" title="查看执行"><i class="fas fa-eye"></i></a>
+                                    <button class="icon-btn" title="暂停"><i class="fas fa-pause"></i></button>
+                                    <button class="icon-btn" title="停止"><i class="fas fa-stop"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- 工具模板 -->
+                <section class="templates-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-layer-group"></i>
+                            快速开始模板
+                        </h2>
+                        <a href="#" class="view-all">浏览全部 <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                    <div class="template-cards">
+                        <div class="template-card">
+                            <div class="template-header wgs">
+                                <i class="fas fa-dna"></i>
+                                <span>WGS</span>
+                            </div>
+                            <div class="template-body">
+                                <h3>全基因组测序分析</h3>
+                                <p>从原始数据到变异检测的完整流程</p>
+                                <div class="template-steps">
+                                    <span>质控</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                    <span>比对</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                    <span>变异</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                    <span>注释</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm">使用模板</button>
+                        </div>
+                        <div class="template-card">
+                            <div class="template-header rna">
+                                <i class="fas fa-rna"></i>
+                                <span>RNA-seq</span>
+                            </div>
+                            <div class="template-body">
+                                <h3>转录组差异表达</h3>
+                                <p>RNA-seq数据分析与可视化</p>
+                                <div class="template-steps">
+                                    <span>比对</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                    <span>计数</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                    <span>差异</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                    <span>富集</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm">使用模板</button>
+                        </div>
+                        <div class="template-card">
+                            <div class="template-header chip">
+                                <i class="fas fa-project-diagram"></i>
+                                <span>ChIP-seq</span>
+                            </div>
+                            <div class="template-body">
+                                <h3>ChIP-seq分析流程</h3>
+                                <p>富集区域鉴定与Motif分析</p>
+                                <div class="template-steps">
+                                    <span>比对</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                    <span>Peaks</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                    <span>注释</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                    <span>Motif</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm">使用模板</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

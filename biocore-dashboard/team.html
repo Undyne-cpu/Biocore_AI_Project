@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioCore - 团队管理</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .team-container {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .team-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .team-stats {
+            display: flex;
+            gap: 16px;
+        }
+
+        .team-stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius);
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .team-stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .team-stat-icon.total { background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2)); color: var(--primary); }
+        .team-stat-icon.active { background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(0, 212, 170, 0.2)); color: var(--success); }
+        .team-stat-icon.pending { background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(239, 68, 68, 0.2)); color: var(--warning); }
+
+        .team-stat-info h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .team-stat-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .team-content {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 24px;
+        }
+
+        .team-list {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .team-list-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .team-list-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .team-member-row {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s ease;
+        }
+
+        .team-member-row:hover {
+            background: var(--bg-hover);
+        }
+
+        .team-member-row:last-child {
+            border-bottom: none;
+        }
+
+        .member-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-right: 16px;
+        }
+
+        .member-info {
+            flex: 1;
+        }
+
+        .member-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .member-email {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .member-role {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-right: 16px;
+        }
+
+        .member-role.admin { background: rgba(102, 126, 234, 0.2); color: var(--primary); }
+        .member-role.researcher { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .member-role.viewer { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
+
+        .member-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .member-action-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--bg-hover);
+            border-radius: var(--border-radius-sm);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .member-action-btn:hover {
+            background: var(--bg-active);
+            color: var(--text-primary);
+        }
+
+        .member-action-btn:hover i {
+            color: var(--danger);
+        }
+
+        /* 邀请面板 */
+        .invite-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius);
+            padding: 24px;
+        }
+
+        .invite-panel h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .invite-panel h3 i {
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius-sm);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+        }
+
+        .role-select {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .role-option {
+            flex: 1;
+            min-width: 80px;
+            padding: 10px;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius-sm);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .role-option:hover {
+            border-color: var(--primary);
+        }
+
+        .role-option.selected {
+            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.15);
+        }
+
+        .role-option i {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--text-muted);
+        }
+
+        .role-option.selected i {
+            color: var(--primary);
+        }
+
+        .role-option span {
+            font-size: 0.8rem;
+        }
+
+        .invite-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            border: none;
+            border-radius: var(--border-radius-sm);
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .invite-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* 权限说明 */
+        .permissions-info {
+            margin-top: 20px;
+            padding: 16px;
+            background: var(--bg-hover);
+            border-radius: var(--border-radius-sm);
+        }
+
+        .permissions-info h4 {
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .permission-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .permission-item i {
+            color: var(--accent);
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边导航栏 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" stroke="url(#grad1)" stroke-width="3"/>
+                        <path d="M12 20 Q16 14, 20 20 T28 20" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <circle cx="14" cy="18" r="2" fill="#00D4AA"/>
+                        <circle cx="26" cy="18" r="2" fill="#00D4AA"/>
+                        <path d="M15 25 Q20 28, 25 25" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">BioCore</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="projects.html" class="nav-item">
+                    <i class="fas fa-folder-open"></i>
+                    <span>项目</span>
+                </a>
+                <a href="data.html" class="nav-item">
+                    <i class="fas fa-database"></i>
+                    <span>数据管理</span>
+                </a>
+                <a href="workflow-designer.html" class="nav-item">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>工作流</span>
+                </a>
+                <a href="visualize.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>可视化</span>
+                </a>
+                <a href="tools.html" class="nav-item">
+                    <i class="fas fa-wrench"></i>
+                    <span>工具</span>
+                </a>
+                <a href="results.html" class="nav-item">
+                    <i class="fas fa-file-medical"></i>
+                    <span>结果查看</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>报告中心</span>
+                </a>
+                <a href="team.html" class="nav-item active">
+                    <i class="fas fa-users"></i>
+                    <span>团队管理</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </a>
+                <div class="user-profile">
+                    <div class="avatar">李</div>
+                    <div class="user-info">
+                        <span class="user-name">李博士</span>
+                        <span class="user-role">研究人员</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部栏 -->
+            <header class="topbar">
+                <div class="breadcrumb">
+                    <a href="index.html">首页</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <a href="projects.html">项目</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span class="current">团队管理</span>
+                </div>
+                <div class="topbar-actions">
+                    <button class="action-btn" title="邀请成员">
+                        <i class="fas fa-user-plus"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 内容区域 -->
+            <div class="content">
+                <!-- 页面标题 -->
+                <div class="page-header">
+                    <div class="page-title-section">
+                        <h1 class="page-title">
+                            <i class="fas fa-users"></i>
+                            团队管理
+                        </h1>
+                        <p class="page-subtitle">管理项目团队成员和权限</p>
+                    </div>
+                </div>
+
+                <div class="team-container">
+                    <!-- 团队统计 -->
+                    <div class="team-stats">
+                        <div class="team-stat-card">
+                            <div class="team-stat-icon total">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="team-stat-info">
+                                <h3>5</h3>
+                                <p>总成员数</p>
+                            </div>
+                        </div>
+                        <div class="team-stat-card">
+                            <div class="team-stat-icon active">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <div class="team-stat-info">
+                                <h3>4</h3>
+                                <p>活跃成员</p>
+                            </div>
+                        </div>
+                        <div class="team-stat-card">
+                            <div class="team-stat-icon pending">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="team-stat-info">
+                                <h3>1</h3>
+                                <p>待确认邀请</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 团队内容 -->
+                    <div class="team-content">
+                        <!-- 成员列表 -->
+                        <div class="team-list">
+                            <div class="team-list-header">
+                                <h3><i class="fas fa-list"></i> 团队成员</h3>
+                            </div>
+                            
+                            <div class="team-member-row">
+                                <div class="member-avatar" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff;">李</div>
+                                <div class="member-info">
+                                    <div class="member-name">李博士</div>
+                                    <div class="member-email">li.boshi@biocore.com</div>
+                                </div>
+                                <span class="member-role admin">管理员</span>
+                                <div class="member-actions">
+                                    <button class="member-action-btn" title="编辑">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="team-member-row">
+                                <div class="member-avatar" style="background: linear-gradient(135deg, #00D4AA, #10b981); color: #fff;">王</div>
+                                <div class="member-info">
+                                    <div class="member-name">王工程师</div>
+                                    <div class="member-email">wang.gc@biocore.com</div>
+                                </div>
+                                <span class="member-role researcher">研究员</span>
+                                <div class="member-actions">
+                                    <button class="member-action-btn" title="编辑">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="member-action-btn" title="移除">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="team-member-row">
+                                <div class="member-avatar" style="background: linear-gradient(135deg, #f093fb, #f5576c); color: #fff;">张</div>
+                                <div class="member-info">
+                                    <div class="member-name">张分析师</div>
+                                    <div class="member-email">zhang.an@biocore.com</div>
+                                </div>
+                                <span class="member-role researcher">研究员</span>
+                                <div class="member-actions">
+                                    <button class="member-action-btn" title="编辑">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="member-action-btn" title="移除">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="team-member-row">
+                                <div class="member-avatar" style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: #fff;">陈</div>
+                                <div class="member-info">
+                                    <div class="member-name">陈助理</div>
+                                    <div class="member-email">chen.xy@biocore.com</div>
+                                </div>
+                                <span class="member-role viewer">查看者</span>
+                                <div class="member-actions">
+                                    <button class="member-action-btn" title="编辑">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="member-action-btn" title="移除">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 邀请面板 -->
+                        <div class="invite-panel">
+                            <h3><i class="fas fa-user-plus"></i> 邀请新成员</h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label">邮箱地址</label>
+                                <input type="email" class="form-input" placeholder="输入成员邮箱">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">选择角色</label>
+                                <div class="role-select">
+                                    <div class="role-option selected">
+                                        <i class="fas fa-eye"></i>
+                                        <span>查看者</span>
+                                    </div>
+                                    <div class="role-option">
+                                        <i class="fas fa-flask"></i>
+                                        <span>研究员</span>
+                                    </div>
+                                    <div class="role-option">
+                                        <i class="fas fa-crown"></i>
+                                        <span>管理员</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="invite-btn">
+                                <i class="fas fa-paper-plane"></i>
+                                发送邀请
+                            </button>
+
+                            <div class="permissions-info">
+                                <h4>角色权限说明</h4>
+                                <div class="permission-item">
+                                    <i class="fas fa-check"></i>
+                                    <span>查看者：仅可查看项目和结果</span>
+                                </div>
+                                <div class="permission-item">
+                                    <i class="fas fa-check"></i>
+                                    <span>研究员：可上传数据、运行分析</span>
+                                </div>
+                                <div class="permission-item">
+                                    <i class="fas fa-check"></i>
+                                    <span>管理员：全部权限 + 成员管理</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 演示数据提示 -->
+    <div class="demo-indicator">
+        <i class="fas fa-info-circle"></i>
+        <span>团队管理演示模式 - 使用模拟数据</span>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // 角色选择
+        document.querySelectorAll('.role-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.role-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+    </script>
+</body>
+</html>

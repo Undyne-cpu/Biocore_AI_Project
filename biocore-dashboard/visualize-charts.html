@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioCore - 分析图表</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --topbar-height: 56px;
+            --chart-card-bg: rgba(30, 32, 44, 0.95);
+        }
+
+        .charts-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - var(--topbar-height));
+            overflow: hidden;
+        }
+
+        /* 图表工具栏 */
+        .charts-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .charts-toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .chart-type-selector {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chart-type-btn {
+            padding: 8px 16px;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius-sm);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chart-type-btn:hover {
+            background: var(--bg-active);
+            color: var(--text-primary);
+        }
+
+        .chart-type-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        .charts-toolbar-right {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* 图表网格 */
+        .charts-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .chart-card {
+            background: var(--chart-card-bg);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .chart-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.15);
+        }
+
+        .chart-card.full-width {
+            grid-column: span 2;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .chart-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .chart-title-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chart-title-icon.heatmap { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .chart-title-icon.volcano { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .chart-title-icon.tree { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .chart-title-icon.bar { background: linear-gradient(135deg, #fa709a, #fee140); }
+        .chart-title-icon.pca { background: linear-gradient(135deg, #a8edea, #fed6e3); }
+
+        .chart-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chart-action-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--bg-hover);
+            border-radius: var(--border-radius-sm);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chart-action-btn:hover {
+            background: var(--bg-active);
+            color: var(--text-primary);
+        }
+
+        .chart-body {
+            flex: 1;
+            min-height: 350px;
+            padding: 16px;
+            position: relative;
+        }
+
+        .chart-body-tall {
+            min-height: 450px;
+        }
+
+        #heatmapChart, #volcanoChart, #treeChart, #barChart, #pcaChart {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 图表类型标签 */
+        .chart-type-badge {
+            padding: 4px 10px;
+            background: rgba(102, 126, 234, 0.15);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* 图表统计信息 */
+        .chart-stats {
+            display: flex;
+            gap: 16px;
+            padding: 12px 20px;
+            background: var(--bg-dark);
+            border-top: 1px solid var(--border);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+        }
+
+        /* 图表筛选器 */
+        .chart-filters {
+            display: flex;
+            gap: 12px;
+            padding: 12px 20px;
+            background: var(--bg-hover);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .filter-select {
+            padding: 6px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius-sm);
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        /* 热图颜色说明 */
+        .heatmap-legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--bg-card);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.75rem;
+        }
+
+        .heatmap-scale {
+            width: 100px;
+            height: 12px;
+            background: linear-gradient(to right, #313695, #4575b4, #abd9e9, #ffffbf, #fdae61, #d73027);
+            border-radius: 2px;
+        }
+
+        /* 火山图标记说明 */
+        .volcano-legend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 12px;
+            background: var(--bg-card);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.75rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.up { background: #d73027; }
+        .legend-dot.down { background: #4575b4; }
+        .legend-dot.ns { background: #999; }
+
+        /* 进化树节点样式 */
+        .tree-legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 16px;
+            padding: 8px 12px;
+            background: var(--bg-card);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.75rem;
+        }
+
+        .tree-node-type {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tree-node-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        /* 全屏模式 */
+        .chart-card.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1000;
+            border-radius: 0;
+        }
+
+        /* 加载动画 */
+        .chart-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chart-loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 提示信息 */
+        .chart-tooltip {
+            position: absolute;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* 响应式 */
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            .chart-card.full-width {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边导航栏 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" stroke="url(#grad1)" stroke-width="3"/>
+                        <path d="M12 20 Q16 14, 20 20 T28 20" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <circle cx="14" cy="18" r="2" fill="#00D4AA"/>
+                        <circle cx="26" cy="18" r="2" fill="#00D4AA"/>
+                        <path d="M15 25 Q20 28, 25 25" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">BioCore</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="projects.html" class="nav-item">
+                    <i class="fas fa-folder-open"></i>
+                    <span>项目</span>
+                </a>
+                <a href="data.html" class="nav-item">
+                    <i class="fas fa-database"></i>
+                    <span>数据管理</span>
+                </a>
+                <a href="workflow-designer.html" class="nav-item">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>工作流</span>
+                </a>
+                <a href="visualize.html" class="nav-item">
+                    <i class="fas fa-dna"></i>
+                    <span>可视化</span>
+                </a>
+                <a href="tools.html" class="nav-item">
+                    <i class="fas fa-wrench"></i>
+                    <span>工具</span>
+                </a>
+                <a href="results.html" class="nav-item">
+                    <i class="fas fa-file-medical"></i>
+                    <span>结果查看</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>报告中心</span>
+                </a>
+                <a href="team.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>团队管理</span>
+                </nav>
+
+            <div class="sidebar-footer">
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </a>
+                <div class="user-profile">
+                    <div class="avatar">李</div>
+                    <div class="user-info">
+                        <span class="user-name">李博士</span>
+                        <span class="user-role">研究人员</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部栏 -->
+            <header class="topbar">
+                <div class="breadcrumb">
+                    <a href="index.html">首页</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <a href="visualize.html">可视化</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span class="current">分析图表</span>
+                </div>
+                <div class="topbar-actions">
+                    <button class="action-btn" title="导入数据" onclick="importData()">
+                        <i class="fas fa-file-import"></i>
+                    </button>
+                    <button class="action-btn" title="导出图表" onclick="exportCharts()">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 图表容器 -->
+            <div class="charts-container">
+                <!-- 工具栏 -->
+                <div class="charts-toolbar">
+                    <div class="charts-toolbar-left">
+                        <div class="chart-type-selector">
+                            <button class="chart-type-btn active" data-type="all" onclick="switchChartType('all')">
+                                <i class="fas fa-th"></i> 全部
+                            </button>
+                            <button class="chart-type-btn" data-type="heatmap" onclick="switchChartType('heatmap')">
+                                <i class="fas fa-table"></i> 热图
+                            </button>
+                            <button class="chart-type-btn" data-type="volcano" onclick="switchChartType('volcano')">
+                                <i class="fas fa-mountain"></i> 火山图
+                            </button>
+                            <button class="chart-type-btn" data-type="tree" onclick="switchChartType('tree')">
+                                <i class="fas fa-tree"></i> 进化树
+                            </button>
+                            <button class="chart-type-btn" data-type="bar" onclick="switchChartType('bar')">
+                                <i class="fas fa-chart-bar"></i> 条形图
+                            </button>
+                        </div>
+                    </div>
+                    <div class="charts-toolbar-right">
+                        <button class="toolbar-btn" onclick="resetFilters()">
+                            <i class="fas fa-filter"></i> 重置筛选
+                        </button>
+                        <button class="toolbar-btn primary" onclick="refreshCharts()">
+                            <i class="fas fa-sync-alt"></i> 刷新数据
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 图表网格 -->
+                <div class="charts-grid" id="chartsGrid">
+                    <!-- 热图 -->
+                    <div class="chart-card" data-chart="heatmap">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                <div class="chart-title-icon heatmap">
+                                    <i class="fas fa-table"></i>
+                                </div>
+                                <span>基因表达热图</span>
+                                <span class="chart-type-badge">Clustered Heatmap</span>
+                            </div>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" title="全屏" onclick="toggleFullscreen('heatmapChart')">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="下载" onclick="downloadChart('heatmap')">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="chart-action-btn" title="设置" onclick="openChartSettings('heatmap')">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-body chart-body-tall">
+                            <div id="heatmapChart"></div>
+                        </div>
+                        <div class="chart-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">5,234</span>
+                                <span class="stat-label">基因数</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">24</span>
+                                <span class="stat-label">样本数</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">ctrl vs treat</span>
+                                <span class="stat-label">对比组</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 火山图 -->
+                    <div class="chart-card" data-chart="volcano">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                <div class="chart-title-icon volcano">
+                                    <i class="fas fa-mountain"></i>
+                                </div>
+                                <span>差异表达火山图</span>
+                                <span class="chart-type-badge">Volcano Plot</span>
+                            </div>
+                            <div class="chart-actions">
+                                <buttonclass="chart-action-btn" title="全屏" onclick="toggleFullscreen('volcanoChart')">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="下载" onclick="downloadChart('volcano')">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="chart-action-btn" title="设置" onclick="openChartSettings('volcano')">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-body chart-body-tall">
+                            <div id="volcanoChart"></div>
+                        </div>
+                        <div class="chart-stats">
+                            <div class="stat-item">
+                                <span class="stat-value" style="color: #d73027;">1,256</span>
+                                <span class="stat-label">上调基因</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" style="color: #4575b4;">892</span>
+                                <span class="stat-label">下调基因</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">3,086</span>
+                                <span class="stat-label">无显著变化</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 进化树 -->
+                    <div class="chart-card full-width" data-chart="tree">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                <div class="chart-title-icon tree">
+                                    <i class="fas fa-tree"></i>
+                                </div>
+                                <span>系统发育进化树</span>
+                                <span class="chart-type-badge">Phylogenetic Tree</span>
+                            </div>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" title="全屏" onclick="toggleFullscreen('treeChart')">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="下载" onclick="downloadChart('tree')">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="chart-action-btn" title="设置" onclick="openChartSettings('tree')">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-body chart-body-tall">
+                            <div id="treeChart"></div>
+                        </div>
+                        <div class="chart-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">32</span>
+                                <span class="stat-label">物种/序列数</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">1000</span>
+                                <span class="stat-label">比对位点数</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">bootstrap: 85%</span>
+                                <span class="stat-label">支持率</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PCA图 -->
+                    <div class="chart-card" data-chart="pca">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                <div class="chart-title-icon pca">
+                                    <i class="fas fa-chart-scatter"></i>
+                                </div>
+                                <span>PCA主成分分析</span>
+                                <span class="chart-type-badge">2D Scatter</span>
+                            </div>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" title="全屏" onclick="toggleFullscreen('pcaChart')">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="下载" onclick="downloadChart('pca')">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="chart-action-btn" title="设置" onclick="openChartSettings('pca')">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div id="pcaChart"></div>
+                        </div>
+                        <div class="chart-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">24</span>
+                                <span class="stat-label">样本数</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">PC1: 35.2%</span>
+                                <span class="stat-label">方差解释</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">PC2: 18.7%</span>
+                                <span class="stat-label">方差解释</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 富集分析条形图 -->
+                    <div class="chart-card" data-chart="bar">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                <div class="chart-title-icon bar">
+                                    <i class="fas fa-chart-bar"></i>
+                                </div>
+                                <span>GO/KEGG富集分析</span>
+                                <span class="chart-type-badge">Bar Chart</span>
+                            </div>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" title="全屏" onclick="toggleFullscreen('barChart')">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                                <button class="chart-action-btn" title="下载" onclick="downloadChart('bar')">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="chart-action-btn" title="设置" onclick="openChartSettings('bar')">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div id="barChart"></div>
+                        </div>
+                        <div class="chart-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">156</span>
+                                <span class="stat-label">显著通路</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">GO:BP</span>
+                                <span class="stat-label">富集类型</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">p<0.05</span>
+                                <span class="stat-label">筛选阈值</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 演示数据提示 -->
+    <div class="demo-indicator">
+        <i class="fas fa-info-circle"></i>
+        <span>分析图表演示模式 - 使用模拟数据</span>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // 全局图表实例
+        let heatmapChart, volcanoChart, treeChart, barChart, pcaChart;
+
+        // 初始化所有图表
+        function initCharts() {
+            initHeatmap();
+            initVolcano();
+            initTree();
+            initBar();
+            initPCA();
+        }
+
+        // 初始化热图
+        function initHeatmap() {
+            const chartDom = document.getElementById('heatmapChart');
+            heatmapChart = echarts.init(chartDom);
+
+            // 生成模拟热图数据
+            const genes = ['BRCA1', 'TP53', 'EGFR', 'KRAS', 'MYC', 'CDK4', 'BRAF', 'PIK3CA', 'PTEN', 'RB1', 'APC', 'VHL', 'MLH1', 'MSH2', 'BRCA2'];
+            const samples = ['Ctrl_1', 'Ctrl_2', 'Ctrl_3', 'Treat_1', 'Treat_2', 'Treat_3', 'Res_1', 'Res_2', 'Sen_1', 'Sen_2'];
+            
+            const data = [];
+            for (let i = 0; i < genes.length; i++) {
+                for (let j = 0; j < samples.length; j++) {
+                    data.push([j, i, (Math.random() - 0.5) * 4]);
+                }
+            }
+
+            const option = {
+                tooltip: {
+                    position: 'top',
+                    formatter: function(params) {
+                        return genes[params.value[1]] + ' - ' + samples[params.value[0]] + '<br/>' +
+                               '表达值: ' + params.value[2].toFixed(2);
+                    }
+                },
+                grid: {
+                    left: '80',
+                    right: '40',
+                    top: '20',
+                    bottom: '60'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: samples,
+                    splitArea: { show: true },
+                    axisLabel: {
+                        color: '#888',
+                        fontSize: 11,
+                        rotate: 45
+                    }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: genes,
+                    splitArea: { show: true },
+                    axisLabel: { color: '#888', fontSize: 11 }
+                },
+                visualMap: {
+                    min: -2,
+                    max: 2,
+                    calculable: true,
+                    orient: 'horizontal',
+                    left: 'center',
+                    bottom: '0',
+                    inRange: {
+                        color: ['#313695', '#4575b4', '#abd9e9', '#ffffbf', '#fdae61', '#d73027']
+                    },
+                    textStyle: { color: '#888' }
+                },
+                series: [{
+                    name: '基因表达',
+                    type: 'heatmap',
+                    data: data,
+                    label: { show: false },
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }]
+            };
+
+            heatmapChart.setOption(option);
+        }
+
+        // 初始化火山图
+        function initVolcano() {
+            const chartDom = document.getElementById('volcanoChart');
+            volcanoChart = echarts.init(chartDom);
+
+            // 生成模拟火山图数据
+            const data = [];
+            for (let i = 0; i < 500; i++) {
+                const logFC = (Math.random() - 0.5) * 8;
+                const negLogPval = Math.random() * 10;
+                
+                let type = 'ns';
+                if (logFC > 1.5 && negLogPval > 2) type = 'up';
+                else if (logFC < -1.5 && negLogPval > 2) type = 'down';
+                
+                data.push({
+                    value: [logFC, negLogPval],
+                    type: type
+                });
+            }
+
+            const option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: function(params) {
+                        return 'logFC: ' + params.value[0].toFixed(2) + '<br/>' +
+                               '-log10(P): ' + params.value[1].toFixed(2);
+                    }
+                },
+                grid: {
+                    left: '60',
+                    right: '40',
+                    top: '20',
+                    bottom: '50'
+                },
+                xAxis: {
+                    type: 'value',
+                    name: 'log2 Fold Change',
+                    nameLocation: 'middle',
+                    nameGap: 30,
+                    axisLabel: { color: '#888' },
+                    axisLine: { lineStyle: { color: '#444' } },
+                    splitLine: { lineStyle: { color: '#333' } },
+                    markLine: {
+                        silent: true,
+                        lineStyle: { color: '#666' },
+                        data: [
+                            { xAxis: -1.5, label: { show: false } },
+                            { xAxis: 1.5, label: { show: false } }
+                        ]
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '-log10(P-value)',
+                    nameLocation: 'middle',
+                    nameGap: 40,
+                    axisLabel: { color: '#888' },
+                    axisLine: { lineStyle: { color: '#444' } },
+                    splitLine: { lineStyle: { color: '#333' } },
+                    markLine: {
+                        silent: true,
+                        lineStyle: { color: '#666' },
+                        data: [{ yAxis: 2, label: { show: false } }]
+                    }
+                },
+                series: [
+                    {
+                        name: 'NS',
+                        type: 'scatter',
+                        data: data.filter(d => d.type === 'ns').map(d => d.value),
+                        symbolSize: 6,
+                        itemStyle: { color: '#666' }
+                    },
+                    {
+                        name: 'Up',
+                        type: 'scatter',
+                        data: data.filter(d => d.type === 'up').map(d => d.value),
+                        symbolSize: 8,
+                        itemStyle: { color: '#d73027' }
+                    },
+                    {
+                        name: 'Down',
+                        type: 'scatter',
+                        data: data.filter(d => d.type === 'down').map(d => d.value),
+                        symbolSize: 8,
+                        itemStyle: { color: '#4575b4' }
+                    }
+                ]
+            };
+
+            volcanoChart.setOption(option);
+        }
+
+        // 初始化进化树
+        function initTree() {
+            const chartDom = document.getElementById('treeChart');
+            treeChart = echarts.init(chartDom);
+
+            // 模拟树状结构数据
+            const treeData = {
+                name: 'Root',
+                children: [
+                    {
+                        name: ' primates',
+                        children: [
+                            { name: ' Human' },
+                            { name: ' Chimpanzee' },
+                            { name: ' Gorilla' },
+                            { name: ' Orangutan' }
+                        ]
+                    },
+                    {
+                        name: ' rodents',
+                        children: [
+                            { name: ' Mouse' },
+                            { name: ' Rat' },
+                            {
+                                name: ' lagomorphs',
+                                children: [
+                                    { name: ' Rabbit' },
+                                    { name: ' Pika' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        name: ' carnivores',
+                        children: [
+                            { name: ' Dog' },
+                            { name: ' Cat' },
+                            { name: ' Fox' }
+                        ]
+                    },
+                    {
+                        name: ' ungulates',
+                        children: [
+                            { name: ' Cow' },
+                            { name: ' Pig' },
+                            { name: ' Horse' },
+                            { name: ' Sheep' }
+                        ]
+                    },
+                    {
+                        name: ' marsupials',
+                        children: [
+                            { name: ' Kangaroo' },
+                            { name: ' Koala' }
+                        ]
+                    },
+                    {
+                        name: ' cetaceans',
+                        children: [
+                            { name: ' Dolphin' },
+                            { name: ' Whale' }
+                        ]
+                    }
+                ]
+            };
+
+            const option = {
+                tooltip: {
+                    trigger: 'item',
+                    triggerOn: 'mousemove',
+                    formatter: function(params) {
+                        return params.name;
+                    }
+                },
+                series: [{
+                    type: 'tree',
+                    data: [treeData],
+                    orient: 'TB',
+                    symbol: 'circle',
+                    symbolSize: 10,
+                    nodePadding: 40,
+                    levelSpacing: 80,
+                    lineStyle: {
+                        color: '#00D4AA',
+                        width: 2,
+                        curveness: 0.5
+                    },
+                    label: {
+                        color: '#fff',
+                        fontSize: 12,
+                        position: 'bottom',
+                        distance: 5
+                    },
+                    leaves: {
+                        label: {
+                            position: 'right'
+                        }
+                    },
+                    emphasis: {
+                        focus: 'ancestor'
+                    }
+                }]
+            };
+
+            treeChart.setOption(option);
+        }
+
+        // 初始化条形图
+        function initBar() {
+            const chartDom = document.getElementById('barChart');
+            barChart = echarts.init(chartDom);
+
+            const pathwayData = [
+                { name: 'Pathway in cancer', value: 156, pval: 1.2e-8 },
+                { name: 'PI3K-Akt signaling', value: 98, pval: 5.6e-6 },
+                { name: 'MAPK signaling', value: 87, pval: 2.3e-5 },
+                { name: 'p53 signaling', value: 65, pval: 8.9e-4 },
+                { name: 'Cell cycle', value: 54, pval: 0.0023 },
+                { name: 'Apoptosis', value: 48, pval: 0.0056 },
+                { name: 'TGF-beta signaling', value: 42, pval: 0.012 },
+                { name: 'Wnt signaling', value: 38, pval: 0.023 },
+                { name: 'Hedgehog signaling', value: 32, pval: 0.041 },
+                { name: 'Notch signaling', value: 28, pval: 0.058 }
+            ];
+
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' },
+                    formatter: function(params) {
+                        const item = pathwayData[params[0].dataIndex];
+                        return params[0].name + '<br/>' +
+                               '基因数: ' + item.value + '<br/>' +
+                               'P-value: ' + item.pval.toExponential(2);
+                    }
+                },
+                grid: {
+                    left: '180',
+                    right: '40',
+                    top: '20',
+                    bottom: '30'
+                },
+                xAxis: {
+                    type: 'value',
+                    axisLabel: { color: '#888' },
+                    axisLine: { lineStyle: { color: '#444' } },
+                    splitLine: { lineStyle: { color: '#333' } }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: pathwayData.map(d => d.name).reverse(),
+                    axisLabel: { color: '#888', fontSize: 11 },
+                    axisLine: { lineStyle: { color: '#444' } }
+                },
+                series: [{
+                    type: 'bar',
+                    data: pathwayData.map(d => d.value).reverse(),
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                            { offset: 0, color: '#667eea' },
+                            { offset: 1, color: '#764ba2' }
+                        ]),
+                        borderRadius: [0, 4, 4, 0]
+                    },
+                    barWidth: 20,
+                    label: {
+                        show: true,
+                        position: 'right',
+                        color: '#888',
+                        fontSize: 11
+                    }
+                }]
+            };
+
+            barChart.setOption(option);
+        }
+
+        // 初始化PCA图
+        function initPCA() {
+            const chartDom = document.getElementById('pcaChart');
+            pcaChart = echarts.init(chartDom);
+
+            const groups = ['Control', 'Treatment', 'Resistant', 'Sensitive'];
+            const colors = ['#667eea', '#00D4AA', '#f093fb', '#fee140'];
+            const data = [];
+
+            groups.forEach((group, groupIndex) => {
+                for (let i = 0; i < 6; i++) {
+                    const baseX = groupIndex * 15 - 20;
+                    const baseY = groupIndex * 8 - 10;
+                    data.push({
+                        value: [
+                            baseX + (Math.random() - 0.5) * 10,
+                            baseY + (Math.random() - 0.5) * 8
+                        ],
+                        group: group,
+                        itemStyle: { color: colors[groupIndex] }
+                    });
+                }
+            });
+
+            const option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: function(params) {
+                        return params.data.group + '<br/>' +
+                               'PC1: ' + params.value[0].toFixed(2) + '<br/>' +
+                               'PC2: ' + params.value[1].toFixed(2);
+                    }
+                },
+legend: {
+                    data: groups,
+                    textStyle: { color: '#888' },
+                    top: 10
+                },
+                grid: {
+                    left: '50',
+                    right: '30',
+                    top: '50',
+                    bottom: '40'
+                },
+                xAxis: {
+                    type: 'value',
+                    name: 'PC1 (35.2%)',
+                    nameLocation: 'middle',
+                    nameGap: 25,
+                    axisLabel: { color: '#888' },
+                    axisLine: { lineStyle: { color: '#444' } },
+                    splitLine: { lineStyle: { color: '#333' } }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'PC2 (18.7%)',
+                    nameLocation: 'middle',
+                    nameGap: 35,
+                    axisLabel: { color: '#888' },
+                    axisLine: { lineStyle: { color: '#444' } },
+                    splitLine: { lineStyle: { color: '#333' } }
+                },
+                series: groups.map((group, index) => ({
+                    name: group,
+                    type: 'scatter',
+                    data: data.filter(d => d.group === group).map(d => d.value),
+                    symbolSize: 12,
+                    itemStyle: { color: colors[index] },
+                    emphasis: {
+                        scale: 1.5
+                    }
+                }))
+            };
+
+            pcaChart.setOption(option);
+        }
+
+        // 切换图表类型
+        function switchChartType(type) {
+            document.querySelectorAll('.chart-type-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.type === type);
+            });
+
+            document.querySelectorAll('.chart-card').forEach(card => {
+                if (type === 'all') {
+                    card.style.display = '';
+                } else {
+                    card.style.display = card.dataset.chart === type ? '' : 'none';
+                }
+            });
+        }
+
+        // 全屏切换
+        function toggleFullscreen(chartId) {
+            const chartCard = document.getElementById(chartId).closest('.chart-card');
+            chartCard.classList.toggle('fullscreen');
+            
+            if (chartCard.classList.contains('fullscreen')) {
+                window[chartId.replace('Chart', '') + 'Chart'].resize();
+            }
+        }
+
+        // 下载图表
+        function downloadChart(chartName) {
+            const chart = window[chartName + 'Chart'];
+            const url = chart.getDataURL({
+                type: 'png',
+                pixelRatio: 2,
+                backgroundColor: '#1e202c'
+            });
+            
+            const link = document.createElement('a');
+            link.download = chartName + '_chart.png';
+            link.href = url;
+            link.click();
+            
+            showNotification('图表已下载', 'success');
+        }
+
+        // 图表设置
+        function openChartSettings(chartName) {
+            showNotification('打开 ' + chartName + ' 设置面板', 'info');
+        }
+
+        // 刷新图表
+        function refreshCharts() {
+            showNotification('正在刷新数据...', 'info');
+            
+            setTimeout(() => {
+                initCharts();
+                showNotification('数据已刷新', 'success');
+            }, 500);
+        }
+
+        // 重置筛选
+        function resetFilters() {
+            switchChartType('all');
+            showNotification('筛选已重置', 'info');
+        }
+
+        // 导入数据
+        function importData() {
+            showNotification('打开数据导入对话框', 'info');
+        }
+
+        // 导出所有图表
+        function exportCharts() {
+            const charts = ['heatmap', 'volcano', 'tree', 'bar', 'pca'];
+            charts.forEach((chartName, index) => {
+                setTimeout(() => downloadChart(chartName), index * 200);
+            });
+        }
+
+        // 响应式调整
+        window.addEventListener('resize', function() {
+            heatmapChart && heatmapChart.resize();
+            volcanoChart && volcanoChart.resize();
+            treeChart && treeChart.resize();
+            barChart && barChart.resize();
+            pcaChart && pcaChart.resize();
+        });
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+        });
+    </script>
+</body>
+</html>

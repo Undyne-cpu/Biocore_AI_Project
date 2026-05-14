@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioCore - 分析工具</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边导航栏 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" stroke="url(#grad1)" stroke-width="3"/>
+                        <path d="M12 20 Q16 14, 20 20 T28 20" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <circle cx="14" cy="18" r="2" fill="#00D4AA"/>
+                        <circle cx="26" cy="18" r="2" fill="#00D4AA"/>
+                        <path d="M15 25 Q20 28, 25 25" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">BioCore</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="projects.html" class="nav-item">
+                    <i class="fas fa-folder-open"></i>
+                    <span>项目</span>
+                </a>
+                <a href="data.html" class="nav-item">
+                    <i class="fas fa-database"></i>
+                    <span>数据管理</span>
+                </a>
+                
+                <a href="workflow-designer.html" class="nav-item">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>工作流</span>
+                </a>
+                <a href="visualize.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>可视化</span>
+                </a>
+                <a href="tools.html" class="nav-item active">
+                    <i class="fas fa-wrench"></i>
+                    <span>工具</span>
+                </a>
+                <a href="results.html" class="nav-item">
+                    <i class="fas fa-file-medical"></i>
+                    <span>结果查看</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>报告中心</span>
+                </a>
+                <a href="team.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>团队管理</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </a>
+                <div class="user-profile">
+                    <div class="avatar">李</div>
+                    <div class="user-info">
+                        <span class="user-name">李博士</span>
+                        <span class="user-role">研究人员</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部栏 -->
+            <header class="topbar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="搜索工具名称或功能...">
+                </div>
+                <div class="topbar-actions">
+                    <button class="action-btn" title="收藏的工具">
+                        <i class="fas fa-star"></i>
+                    </button>
+                    <button class="action-btn" title="通知">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+                    <button class="action-btn" title="帮助">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 内容区域 -->
+            <div class="content">
+                <!-- 页面标题区 -->
+                <div class="page-header">
+                    <div class="page-title-section">
+                        <h1 class="page-title">
+                            <i class="fas fa-wrench"></i>
+                            分析工具
+                        </h1>
+                        <p class="page-subtitle">共 <span id="toolCount">16</span> 个工具，涵盖序列处理、变异分析、表达分析等</p>
+                    </div>
+                </div>
+
+                <!-- 工具分类导航 -->
+                <div class="tool-categories">
+                    <button class="category-btn active" data-category="all">
+                        <i class="fas fa-th-large"></i>
+                        <span>全部工具</span>
+                    </button>
+                    <button class="category-btn" data-category="sequence">
+                        <i class="fas fa-font"></i>
+                        <span>序列工具</span>
+                    </button>
+                    <button class="category-btn" data-category="variant">
+                        <i class="fas fa-dna"></i>
+                        <span>变异分析</span>
+                    </button>
+                    <button class="category-btn" data-category="expression">
+                        <i class="fas fa-chart-line"></i>
+                        <span>表达分析</span>
+                    </button>
+                </div>
+
+                <!-- 工具卡片网格 -->
+                <div class="tools-grid" id="toolsGrid">
+                    <!-- 序列工具集 -->
+                    <div class="tool-card" data-category="sequence" data-tool="fastqc">
+                        <div class="tool-header">
+                            <div class="tool-icon fastqc">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <button class="tool-favorite" title="收藏">
+                                <i class="far fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="tool-body">
+                            <h3 class="tool-name">FastQC</h3>
+                            <p class="tool-desc">测序数据质量评估与质量控制</p>
+                            <div class="tool-tags">
+                                <span class="tag input">输入: FASTQ</span>
+                                <span class="tag output">输出: HTML报告</span>
+                            </div>
+                        </div>
+                        <div class="tool-footer">
+                            <span class="tool-version">v0.11.9</span>
+                            <a href="tool-detail.html?tool=fastqc" class="btn btn-sm">使用工具</a>
+                        </div>
+                    </div>
+
+                    <div class="tool-card" data-category="sequence" data-tool="blast">
+                        <div class="tool-header">
+                            <div class="tool-icon blast">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <button class="tool-favorite" title="收藏">
+                                <i class="far fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="tool-body">
+                            <h3 class="tool-name">BLAST</h3>
+                            <p class="tool-desc">序列比对搜索工具，支持 nucleotide 与 protein</p>
+                            <div class="tool-tags">
+                                <span class="tag input">输入: FASTA</span>
+                                <span class="tag output">输出: 比对表格</span>
+                            </div>
+                        </div>
+                        <div class="tool-footer">
+                            <span class="tool-version">v2.13.0</span>
+                            <a href="tool-detail.html?tool=blast" class="btn btn-sm">使用工具</a>
+                        </div>
+                    </div>
+
+                    <div class="tool-card" data-category="sequence" data-tool="muscle">
+                        <div class="tool-header">
+                            <div class="tool-icon muscle">
+                                <i class="fas fa-align-left"></i>
+                            </div>
+                            <button class="tool-favorite" title="收藏">
+                                <i class="far fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="tool-body">
+                            <h3 class="tool-name">MUSCLE</h3>
+                            <p class="tool-desc">多序列比对工具，支持大规模序列集合</p>
+                            <div class="tool-tags">
+                                <span class="tag input">输入: FASTA</span>
+                                <span class="tag output">输出: ALIGN</span>
+                            </div>
+                        </div>
+                        <div class="tool-footer">
+                            <span class="tool-version">v5.1</span>
+                            <a href="tool-detail.html?tool=muscle" class="btn btn-sm">使用工具</a>
+                        </div>
+                    </div>
+
+                    <div class="tool-card" data-category="sequence" data-tool="hmmer">
+                        <div class="tool-header">
+                            <div class="tool-icon hmmer">
+                                <i class="fas fa-wave-square"></i>
+                            </div>
+                            <button class="tool-favorite" title="收藏">
+                                <i class="far fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="tool-body">
+                            <h3 class="tool-name">HMMER</h3>
+                            <p class="tool-desc">隐马尔可夫模型序列搜索与分析</p>
+                            <div class="tool-tags">
+                                <span class="tag input">输入: FASTA</span>
+                                <span class="tag output">输出: 表格</span>
+                            </div>
+                        </div>
+                        <div class="tool-footer">
+                            <span class="tool-version">v3.3.2</span>
+                            <a href="tool-detail.html?tool=hmmer" class="btn btn-sm">使用工具</a>
+                        </div>
+                    </div>
+
+                    <!-- 变异分析工具集 -->
+                    <div class="tool-card" data-category="variant" data-tool="bwa">
+                        <div class="tool-header">
+                            <div class="tool-icon bwa">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            <button class="tool-favorite" title="收藏">
+                                <i class="far fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="tool-body">
+                            <h3 class="tool-name">BWA-MEM</h3>
+                            <p class="tool-desc">高性能序列比对工具，支持长reads</p>
+                            <div class="tool-tags">
+                                <span class="tag input">输入: FASTQ</span>
+                                <span class="tag output">输出: SAM/BAM</span>
+                            </div>
+                        </div>
+                        <div class="tool-footer">
+                            <span class="tool-version">v0.7.17</span>
+                            <a href="tool-detail.html?tool=bwa" class="btn btn-sm">使用工具</a>
+                        </div>
+                    </div>
+
+                    <div class="tool-card" data-category="variant" data-tool="gatk">
+                        <div class="tool-header">
+                            <div class="tool-icon gatk">
+                                <i class="fas fa-dna"></i>
+                            </div>
+                            <button class="tool-favorite" title="收藏">
+                                <i class="far fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="tool-body">
+                            <h3 class="tool-name">GATK HaplotypeCaller</h3>
+                            <p class="tool-desc">SNP与Indel变异检测的金标准工具</p>
+                            <div class="tool-tags">
+                                <span class="tag input">输入: BAM</span>
+                                <span class="tag output">输出: VCF</span>
+                            </div>
+                        </div>
+                        <div class="tool-footer">
+                            <span class="tool-version">v4.3.0</span>
+                            <a href="tool-detail.html?tool=gatk" class="btn btn-sm">使用工具</a>
+                        </div>
+                    </div>
+
+                    <div class="tool-card" data-category="variant" data-tool="annovar">
+                        <div class="tool-header">
+                            <div class="tool-icon annovar">
+                                <i class="fas fa-tags"></i>
+                            </div>
+                            <button class="tool-favorite" title="收藏">
+                                <i class="far fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="tool-body">
+                            <h3 class="tool-name">ANNOVAR</h3>
+                            <p class="tool-desc">遗传变异功能注释工具</p>
+                            <div class="tool-tags">
+                                <span class="tag input">输入: VCF</span>
+                                <span class="tag output">输出: 注释VCF</span>
+                            </div>
+                        </div>
+                        <div class="tool-footer">
+                            <span class="tool-version">2023-06-08</span>
+                            <a href="tool-detail.html?tool=annovar" class="btn btn-sm">使用工具</a>
+                        </div>
+                    </div>
+
+                    <div class="tool-card" data-category="variant" data-tool="cnvnator">
+                        <div class="tool-header">
+                            <div class="tool-icon cnvnator">
+                                <i class="fas fa-copy"></i>
+                            </div>
+                            <button class="tool-favorite" title="收藏">
+                                <i class="far fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="tool-body">
+                            <h3 class="tool-name">CNVnator</h3>
+                            <p class="tool-desc">拷贝数变异(CNV)检测工具</p>
+                            <div class="tool-tags">
+                                <span class="tag input">输入: BAM</span>
+                                <span class="tag output">输出: 表格</span>
+                            </div>
+                        </div>
+                        <div class="tool-footer">
+                            <span class="tool-version">v0.4.1</span>
+                            <a href="tool-detail.html?tool=cnvnator" class="btn btn-sm">使用工具</a>
+                        </div>
+                    </div>
+
+                    <!-- 表达分析工具集 -->
+                    <div class="tool-card" data-category="expression" data-tool="star">
+                        <div class="tool-header">
+                            <div class="tool-icon star">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <button class="tool-favorite" title="收藏">
+                                <i class="far fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="tool-body">
+                            <h3 class="tool-name">STAR</h3>
+                            <p class="tool-desc">RNA-seq序列比对工具，支持剪接比对</p>
+                            <div class="tool-tags">
+                                <span class="tag input">输入: FASTQ</span>
+                                <span class="tag output">输出: BAM</span>
+                            </div>
+                        </div>
+                        <div class="tool-footer">
+                            <span class="tool-version">v2.7.10</span>
+                            <a href="tool-detail.html?tool=star" class="btn btn-sm">使用工具</a>
+                        </div>
+                    </div>
+
+                    <div class="tool-card" data-category="expression" data-tool="featurecounts">
+                        <div class="tool-header">
+                            <div class="tool-icon featurecounts">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <button class="tool-favorite" title="收藏">
+                                <i class="far fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="tool-body">
+                            <h3 class="tool-name">featureCounts</h3>
+                            <p class="tool-desc">基因表达计数工具，支持GTF注释</p>
+                            <div class="tool-tags">
+                                <span class="tag input">输入: BAM</span>
+                                <span class="tag output">输出: 计数矩阵</span>
+                            </div>
+                        </div>
+                        <div class="tool-footer">
+                            <span class="tool-version">v2.0.3</span>
+                            <a href="tool-detail.html?tool=featurecounts" class="btn btn-sm">使用工具</a>
+                        </div>
+                    </div>
+
+                    <div class="tool-card" data-category="expression" data-tool="deseq2">
+                        <div class="tool-header">
+                            <div class="tool-icon deseq2">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <button class="tool-favorite" title="收藏">
+                                <i class="far fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="tool-body">
+                            <h3 class="tool-name">DESeq2</h3>
+                            <p class="tool-desc">差异表达分析工具，支持样本比较</p>
+                            <div class="tool-tags">
+                                <span class="tag input">输入: 计数矩阵</span>
+                                <span class="tag output">输出: 结果表格</span>
+                            </div>
+                        </div>
+                        <div class="tool-footer">
+                            <span class="tool-version">v1.38.0</span>
+                            <a href="tool-detail.html?tool=deseq2" class="btn btn-sm">使用工具</a>
+                        </div>
+                    </div>
+
+                    <div class="tool-card" data-category="expression" data-tool="gsea">
+                        <div class="tool-header">
+                            <div class="tool-icon gsea">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <button class="tool-favorite" title="收藏">
+                                <i class="far fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="tool-body">
+                            <h3 class="tool-name">GSEA</h3>
+                            <p class="tool-desc">基因集富集分析工具</p>
+                            <div class="tool-tags">
+                                <span class="tag input">输入: 基因列表</span>
+                                <span class="tag output">输出: 富集结果</span>
+                            </div>
+                        </div>
+                        <div class="tool-footer">
+                            <span class="tool-version">v4.3.2</span>
+                            <a href="tool-detail.html?tool=gsea" class="btn btn-sm">使用工具</a>
+                        </div>
+                    </div>
+
+                    <!-- 更多工具 -->
+                    <div class="tool-card" data-category="sequence" data-tool="seqkit">
+<div class="tool-header">
+                            <div class="tool-icon seqkit">
+                                <i class="fas fa-tools"></i>
+                            </div>
+                            <button class="tool-favorite" title="收藏">
+                                <i class="far fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="tool-body">
+                            <h3 class="tool-name">SeqKit</h3>
+                            <p class="tool-desc">序列处理工具箱，支持格式转换、统计等</p>
+                            <div class="tool-tags">
+                                <span class="tag input">输入: 多格式</span>
+                                <span class="tag output">输出: 多格式</span>
+                            </div>
+                        </div>
+                        <div class="tool-footer">
+                            <span class="tool-version">v2.3.1</span>
+                            <a href="tool-detail.html?tool=seqkit" class="btn btn-sm">使用工具</a>
+                        </div>
+                    </div>
+
+                    <div class="tool-card" data-category="variant" data-tool="freebayes">
+                        <div class="tool-header">
+                            <div class="tool-icon freebayes">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <button class="tool-favorite" title="收藏">
+                                <i class="far fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="tool-body">
+                            <h3 class="tool-name">FreeBayes</h3>
+                            <p class="tool-desc">基于贝叶斯模型的SNP/Indel检测</p>
+                            <div class="tool-tags">
+                                <span class="tag input">输入: BAM</span>
+                                <span class="tag output">输出: VCF</span>
+                            </div>
+                        </div>
+                        <div class="tool-footer">
+                            <span class="tool-version">v1.3.6</span>
+                            <a href="tool-detail.html?tool=freebayes" class="btn btn-sm">使用工具</a>
+                        </div>
+                    </div>
+
+                    <div class="tool-card" data-category="expression" data-tool="macs3">
+                        <div class="tool-header">
+                            <div class="tool-icon macs3">
+                                <i class="fas fa-mountain"></i>
+                            </div>
+                            <button class="tool-favorite" title="收藏">
+                                <i class="far fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="tool-body">
+                            <h3 class="tool-name">MACS3</h3>
+                            <p class="tool-desc">ChIP-seq峰值检测工具</p>
+                            <div class="tool-tags">
+                                <span class="tag input">输入: BAM</span>
+                                <span class="tag output">输出: BED</span>
+                            </div>
+                        </div>
+                        <div class="tool-footer">
+                            <span class="tool-version">v3.0.0</span>
+                            <a href="tool-detail.html?tool=macs3" class="btn btn-sm">使用工具</a>
+                        </div>
+                    </div>
+
+                    <div class="tool-card" data-category="expression" data-tool="samtools">
+                        <div class="tool-header">
+                            <div class="tool-icon samtools">
+                                <i class="fas fa-file-code"></i>
+                            </div>
+                            <button class="tool-favorite" title="收藏">
+                                <i class="far fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="tool-body">
+                            <h3 class="tool-name">SAMtools</h3>
+                            <p class="tool-desc">SAM/BAM文件处理工具集</p>
+                            <div class="tool-tags">
+                                <span class="tag input">输入: SAM/BAM</span>
+                                <span class="tag output">输出: BAM/CRAM</span>
+                            </div>
+                        </div>
+                        <div class="tool-footer">
+                            <span class="tool-version">v1.17</span>
+                            <a href="tool-detail.html?tool=samtools" class="btn btn-sm">使用工具</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // 工具页面交互逻辑
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            const toolCards = document.querySelectorAll('.tool-card');
+            const toolCount = document.getElementById('toolCount');
+
+            // 分类筛选
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    filterTools();
+                });
+            });
+
+            // 搜索筛选
+            searchInput.addEventListener('input', filterTools);
+
+            // 筛选函数
+            function filterTools() {
+                const category = document.querySelector('.category-btn.active').dataset.category;
+                const searchTerm = searchInput.value.toLowerCase();
+                let visibleCount = 0;
+
+                toolCards.forEach(card => {
+                    const cardCategory = card.dataset.category;
+                    const toolName = card.dataset.tool;
+                    const toolDesc = card.querySelector('.tool-desc').textContent.toLowerCase();
+
+                    const matchCategory = category === 'all' || cardCategory === category;
+                    const matchSearch = toolName.includes(searchTerm) || toolDesc.includes(searchTerm);
+
+                    if (matchCategory && matchSearch) {
+                        card.style.display = 'block';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                toolCount.textContent = visibleCount;
+            }
+
+            // 收藏功能
+            document.querySelectorAll('.tool-favorite').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('far')) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        this.classList.add('favorited');
+                    } else {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        this.classList.remove('favorited');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

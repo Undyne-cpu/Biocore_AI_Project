@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioCore - 结果查看</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边导航栏 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" stroke="url(#grad1)" stroke-width="3"/>
+                        <path d="M12 20 Q16 14, 20 20 T28 20" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <circle cx="14" cy="18" r="2" fill="#00D4AA"/>
+                        <circle cx="26" cy="18" r="2" fill="#00D4AA"/>
+                        <path d="M15 25 Q20 28, 25 25" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">BioCore</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="projects.html" class="nav-item">
+                    <i class="fas fa-folder-open"></i>
+                    <span>项目</span>
+                </a>
+                <a href="data.html" class="nav-item">
+                    <i class="fas fa-database"></i>
+                    <span>数据管理</span>
+                </a>
+                
+                <a href="workflow-designer.html" class="nav-item">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>工作流</span>
+                </a>
+                <a href="visualize.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>可视化</span>
+                </a>
+                <a href="tools.html" class="nav-item">
+                    <i class="fas fa-wrench"></i>
+                    <span>工具</span>
+                </a>
+                <a href="results.html" class="nav-item active">
+                    <i class="fas fa-file-medical"></i>
+                    <span>结果查看</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>报告中心</span>
+                </a>
+                <a href="team.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>团队管理</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </a>
+                <div class="user-profile">
+                    <div class="avatar">李</div>
+                    <div class="user-info">
+                        <span class="user-name">李博士</span>
+                        <span class="user-role">研究人员</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部栏 -->
+            <header class="topbar">
+                <div class="breadcrumb">
+                    <a href="index.html">首页</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span class="current">结果查看</span>
+                </div>
+                <div class="topbar-actions">
+                    <button class="action-btn" title="刷新">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="action-btn" title="导出">
+                        <i class="fas fa-file-export"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 内容区域 -->
+            <div class="content">
+                <!-- 页面标题 -->
+                <div class="page-header">
+                    <div class="page-title-section">
+                        <h1 class="page-title">
+                            <i class="fas fa-file-medical"></i>
+                            分析结果
+                        </h1>
+                        <p class="page-subtitle">查看和管理所有分析任务的结果</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download"></i>
+                            批量导出
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 统计概览 -->
+                <div class="results-stats">
+                    <div class="result-stat-card">
+                        <div class="result-stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="result-stat-info">
+                            <span class="result-stat-value">128</span>
+                            <span class="result-stat-label">已完成</span>
+                        </div>
+                    </div>
+                    <div class="result-stat-card">
+                        <div class="result-stat-icon processing">
+                            <i class="fas fa-spinner"></i>
+                        </div>
+                        <div class="result-stat-info">
+                            <span class="result-stat-value">12</span>
+                            <span class="result-stat-label">处理中</span>
+                        </div>
+                    </div>
+                    <div class="result-stat-card">
+                        <div class="result-stat-icon warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="result-stat-info">
+                            <span class="result-stat-value">3</span>
+                            <span class="result-stat-label">失败</span>
+                        </div>
+                    </div>
+                    <div class="result-stat-card">
+                        <div class="result-stat-icon total">
+                            <i class="fas fa-folder"></i>
+                        </div>
+                        <div class="result-stat-info">
+                            <span class="result-stat-value">2.4 GB</span>
+                            <span class="result-stat-label">总大小</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 筛选工具栏 -->
+                <div class="filter-toolbar">
+                    <div class="filter-left">
+                        <div class="filter-group">
+                            <label>项目</label>
+                            <select id="projectFilter">
+                                <option value="">全部项目</option>
+                                <option value="wgs">全基因组测序分析</option>
+                                <option value="rna">RNA-seq差异表达分析</option>
+                                <option value="chip">ChIP-seq分析</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>工具</label>
+                            <select id="toolFilter">
+                                <option value="">全部工具</option>
+                                <option value="fastqc">FastQC</option>
+                                <option value="bwa">BWA</option>
+                                <option value="gatk">GATK</option>
+                                <option value="annovar">ANNOVAR</option>
+                                <option value="star">STAR</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>状态</label>
+                            <select id="statusFilter">
+                                <option value="">全部状态</option>
+                                <option value="completed">已完成</option>
+                                <option value="processing">处理中</option>
+                                <option value="failed">失败</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-right">
+                        <div class="search-box" style="width: 280px;">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="搜索结果名称...">
+                        </div>
+                        <div class="view-toggle">
+                            <button class="view-btn active" title="网格视图">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button class="view-btn" title="列表视图">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 结果网格 -->
+                <div class="results-grid">
+                    <!-- 结果卡片 1 -->
+                    <div class="result-card" data-type="fastqc">
+                        <div class="result-card-header">
+                            <div class="result-tool-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div class="result-actions">
+                                <button class="result-action-btn" title="下载">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="result-action-btn" title="删除">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                            <span class="result-status completed">已完成</span>
+                        </div>
+                        <div class="result-card-body">
+                            <h3 class="result-name">Sample1_R1_fastqc.html</h3>
+                            <p class="result-meta">FastQC 质量控制报告</p>
+                            <div class="result-summary">
+                                <div class="summary-item">
+                                    <span class="summary-label">碱基质量</span>
+                                    <span class="summary-value good">优秀</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">GC含量</span>
+                                    <span class="summary-value good">正常</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="result-card-footer">
+                            <span class="result-info">
+                                <i class="fas fa-folder"></i>
+                                WGS项目
+                            </span>
+                            <span class="result-time">2小时前</span>
+                        </div>
+                    </div>
+
+                    <!-- 结果卡片 2 -->
+                    <div class="result-card" data-type="vcf">
+                        <div class="result-card-header vcf">
+                            <div class="result-tool-icon">
+                                <i class="fas fa-dna"></i>
+                            </div>
+                            <div class="result-actions">
+                                <button class="result-action-btn" title="下载">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="result-action-btn" title="删除">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                            <span class="result-status completed">已完成</span>
+                        </div>
+                        <div class="result-card-body">
+                            <h3 class="result-name">variants_final.vcf</h3>
+                            <p class="result-meta">GATK 变异检测结果</p>
+                            <div class="result-summary">
+                                <div class="summary-item">
+                                    <span class="summary-label">SNP数量</span>
+                                    <span class="summary-value">45,892</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">Indel数量</span>
+                                    <span class="summary-value">3,241</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="result-card-footer">
+                            <span class="result-info">
+                                <i class="fas fa-folder"></i>
+                                WGS项目
+                            </span>
+                            <span class="result-time">昨天</span>
+                        </div>
+                    </div>
+
+                    <!-- 结果卡片 3 - 处理中 -->
+                    <div class="result-card processing" data-type="bam">
+                        <div class="result-card-header bam">
+                            <div class="result-tool-icon">
+                                <i class="fas fa-align-left"></i>
+                            </div>
+                            <div class="result-actions">
+                                <button class="result-action-btn" title="取消">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <span class="result-status processing">处理中 65%</span>
+                        </div>
+                        <div class="result-card-body">
+                            <h3 class="result-name">Sample2_alignment.bam</h3>
+                            <p class="result-meta">BWA-MEM 序列比对</p>
+                            <div class="processing-bar">
+                                <div class="processing-fill" style="width: 65%"></div>
+                            </div>
+                        </div>
+                        <div class="result-card-footer">
+                            <span class="result-info">
+                                <i class="fas fa-folder"></i>
+                                RNA-seq项目
+                            </span>
+                            <span class="result-time">5分钟前</span>
+                        </div>
+                    </div>
+
+                    <!-- 结果卡片 4 -->
+                    <div class="result-card" data-type="annotation">
+                        <div class="result-card-header annotation">
+                            <div class="result-tool-icon">
+                                <i class="fas fa-tags"></i>
+                            </div>
+                            <div class="result-actions">
+                                <button class="result-action-btn" title="下载">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="result-action-btn" title="删除">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                            <span class="result-status completed">已完成</span>
+                        </div>
+                        <div class="result-card-body">
+                            <h3 class="result-name">annotated_variants.csv</h3>
+                            <p class="result-meta">ANNOVAR 变异注释</p>
+                            <div class="result-summary">
+                                <div class="summary-item">
+                                    <span class="summary-label">注释数据库</span>
+                                    <span class="summary-value">dbSNP, ClinVar</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">影响类型</span>
+                                    <span class="summary-value">8种</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="result-card-footer">
+                            <span class="result-info">
+                                <i class="fas fa-folder"></i>
+                                WGS项目
+                            </span>
+                            <span class="result-time">昨天</span>
+                        </div>
+                    </div>
+
+                    <!-- 结果卡片 5 - 失败 -->
+                    <div class="result-card failed" data-type="deseq">
+                        <div class="result-card-header failed">
+                            <div class="result-tool-icon">
+                                <i class="fas fa-function"></i>
+                            </div>
+                            <div class="result-actions">
+                                <button class="result-action-btn" title="重试">
+                                    <i class="fas fa-redo"></i>
+                                </button>
+                                <button class="result-action-btn" title="删除">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                            <span class="result-status failed">失败</span>
+                        </div>
+                        <div class="result-card-body">
+                            <h3 class="result-name">differential_expression.csv</h3>
+                            <p class="result-meta">DESeq2 差异表达分析</p>
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                内存不足，分析中断
+                            </div>
+                        </div>
+                        <div class="result-card-footer">
+                            <span class="result-info">
+                                <i class="fas fa-folder"></i>
+                                RNA-seq项目
+                            </span>
+                            <span class="result-time">3天前</span>
+                        </div>
+                    </div>
+
+                    <!-- 结果卡片 6 -->
+                    <div class="result-card" data-type="heatmap">
+                        <div class="result-card-header heatmap">
+                            <div class="result-tool-icon">
+                                <i class="fas fa-th"></i>
+                            </div>
+                            <div class="result-actions">
+                                <button class="result-action-btn" title="查看">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="result-action-btn" title="下载">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                            <span class="result-status completed">已完成</span>
+                        </div>
+                        <div class="result-card-body">
+                            <h3 class="result-name">expression_heatmap.png</h3>
+                            <p class="result-meta">表达量热图可视化</p>
+                            <div class="result-preview">
+                                <div class="preview-placeholder">
+                                    <i class="fas fa-image"></i>
+                                    <span>预览图</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="result-card-footer">
+                            <span class="result-info">
+                                <i class="fas fa-folder"></i>
+                                RNA-seq项目
+                            </span>
+                            <span class="result-time">5天前</span>
+                        </div>
+                    </div>
+
+                    <!-- 结果卡片 7 -->
+                    <div class="result-card" data-type="report">
+                        <div class="result-card-header report">
+                            <div class="result-tool-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="result-actions">
+                                <button class="result-action-btn" title="下载">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="result-action-btn" title="分享">
+                                    <i class="fas fa-share-alt"></i>
+                                </button>
+                            </div>
+                            <span class="result-status completed">已完成</span>
+                        </div>
+                        <div class="result-card-body">
+                            <h3 class="result-name">WGS_Analysis_Report.pdf</h3>
+                            <p class="result-meta">完整分析报告</p>
+                            <div class="result-summary">
+                                <div class="summary-item">
+                                    <span class="summary-label">页数</span>
+                                    <span class="summary-value">24页</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">大小</span>
+                                    <span class="summary-value">2.3 MB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="result-card-footer">
+                            <span class="result-info">
+                                <i class="fas fa-folder"></i>
+                                WGS项目
+                            </span>
+                            <span class="result-time">1周前</span>
+                        </div>
+                    </div>
+
+                    <!-- 结果卡片 8 -->
+                    <div class="result-card" data-type="bed">
+                        <div class="result-card-header bed">
+                            <div class="result-tool-icon">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <div class="result-actions">
+                                <button class="result-action-btn" title="下载">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="result-action-btn" title="删除">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                            <span class="result-status completed">已完成</span>
+                        </div>
+                        <div class="result-card-body">
+                            <h3 class="result-name">peaks.bed</h3>
+                            <p class="result-meta">ChIP-seq 峰检测结果</p>
+                            <div class="result-summary">
+                                <div class="summary-item">
+                                    <span class="summary-label">峰值数量</span>
+                                    <span class="summary-value">15,678</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">基因组区域</span>
+                                    <span class="summary-value">hg38</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="result-card-footer">
+                            <span class="result-info">
+                                <i class="fas fa-folder"></i>
+                                ChIP-seq项目
+                            </span>
+                            <span class="result-time">2周前</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 分页 -->
+                <div class="pagination">
+                    <div class="pagination-info">
+                        显示 1-8 条，共 143 条结果
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="page-btn" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <span class="page-ellipsis">...</span>
+                        <button class="page-btn">18</button>
+                        <button class="page-btn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="pagination-size">
+                        <span>每页</span>
+                        <select>
+                            <option>8</option>
+                            <option selected>16</option>
+                            <option>32</option>
+                            <option>50</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 结果详情模态框 -->
+    <div class="modal-overlay" id="resultDetailModal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h2>
+                    <i class="fas fa-file-alt"></i>
+                    结果详情
+                </h2>
+                <button class="modal-close" onclick="closeDetailModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-layout">
+                    <div class="detail-main">
+                        <!-- 基本信息 -->
+                        <div class="detail-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-info-circle"></i>
+                                基本信息
+                            </h3>
+                            <div class="detail-grid">
+                                <div class="detail-item">
+                                    <span class="detail-label">文件名</span>
+                                    <span class="detail-value">variants_final.vcf</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">工具</span>
+                                    <span class="detail-value">GATK HaplotypeCaller</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">项目</span>
+                                    <span class="detail-value">全基因组测序分析</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">执行时间</span>
+                                    <span class="detail-value">2026-05-10 14:32:18</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">文件大小</span>
+                                    <span class="detail-value">12.5 MB</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">状态</span>
+                                    <span class="detail-badge success">已完成</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 统计摘要 -->
+                        <div class="detail-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-chart-pie"></i>
+                                统计摘要
+                            </h3>
+                            <div class="stats-grid">
+                                <div class="stat-box">
+                                    <span class="stat-number">45,892</span>
+                                    <span class="stat-desc">SNP 变异</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-number">3,241</span>
+                                    <span class="stat-desc">InDel 变异</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-number">98.2%</span>
+                                    <span class="stat-desc">调用质量</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-number">28,456</span>
+                                    <span class="stat-desc">已注释</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 预览区域 -->
+                        <div class="detail-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-eye"></i>
+                                文件预览
+                            </h3>
+                            <div class="file-preview">
+                                <pre class="preview-content">##fileformat=VCFv4.2
+##filedate=20260510
+##source=GATK HaplotypeCaller
+##reference=hg38
+##INFO=&lt;ID=DP,Number=1,Type=Integer,Description="Total Depth"&gt;
+##INFO=&lt;ID=AF,Number=A,Type=Float,Description="Allele Frequency"&gt;
+##FORMAT=&lt;ID=GT,Number=1,Type=String,Description="Genotype"&gt;
+##FORMAT=&lt;ID=GQ,Number=1,Type=Integer,Description="Genotype Quality"&gt;
+#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO
+chr1    12805   rs123   G       A       125.3   PASS    DP=45;AF=0.52
+chr1    28456   rs456   C       T       89.7    PASS    DP=32;AF=0.48
+chr1    45678   .       A       G       156.2   PASS    DP=58;AF=0.35</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 侧边栏 -->
+                    <div class="detail-sidebar">
+                        <div class="detail-action-card">
+                            <h4>操作</h4>
+                            <div class="action-buttons">
+                                <button class="action-button">
+                                    <i class="fas fa-download"></i>
+                                    <span>下载结果</span>
+                                </button>
+                                <button class="action-button">
+                                    <i class="fas fa-share"></i>
+                                    <span>分享</span>
+                                </button>
+                                <button class="action-button">
+                                    <i class="fas fa-sync"></i>
+                                    <span>重新运行</span>
+                                </button>
+                                <button class="action-button">
+                                    <i class="fas fa-play-circle"></i>
+                                    <span>可视化</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="detail-history-card">
+                            <h4>历史记录</h4>
+                            <div class="history-timeline">
+                                <div class="timeline-item success">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <span class="timeline-time">2小时前</span>
+                                        <span class="timeline-text">任务完成，生成结果文件</span>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <span class="timeline-time">2.5小时前</span>
+                                        <span class="timeline-text">开始变异检测</span>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <span class="timeline-time">3小时前</span>
+                                        <span class="timeline-text">数据预处理完成</span>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <span class="timeline-time">3.1小时前</span>
+                                        <span class="timeline-text">任务启动</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeDetailModal()">关闭</button>
+                <button class="btn btn-primary">
+                    <i class="fas fa-download"></i>
+                    导出报告
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 视图切换
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const resultsGrid = document.querySelector('.results-grid');
+                if (this.querySelector('.fa-list')) {
+                    resultsGrid.classList.add('list-view');
+                } else {
+                    resultsGrid.classList.remove('list-view');
+                }
+            });
+        });
+
+        // 结果卡片点击
+        document.querySelectorAll('.result-card:not(.processing):not(.failed)').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (!e.target.closest('.result-action-btn')) {
+                    document.getElementById('resultDetailModal').classList.add('active');
+                }
+            });
+        });
+
+        // 关闭详情模态框
+        function closeDetailModal() {
+            document.getElementById('resultDetailModal').classList.remove('active');
+        }
+
+        // 点击模态框外部关闭
+        document.getElementById('resultDetailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDetailModal();
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

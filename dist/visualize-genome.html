@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioCore - 基因组浏览器</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .genome-container {
+            display: grid;
+            grid-template-columns: 280px 1fr 300px;
+            gap: 0;
+            height: calc(100vh - var(--topbar-height));
+            overflow: hidden;
+        }
+
+        .genome-sidebar {
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .genome-sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .genome-sidebar-header h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .genome-sidebar-header h3 i {
+            color: var(--primary);
+        }
+
+        .genome-search {
+            padding: 12px 16px;
+            background: var(--bg-dark);
+            margin: 12px;
+            border-radius: var(--border-radius-sm);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .genome-search i {
+            color: var(--text-muted);
+        }
+
+        .genome-search input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+        }
+
+        .genome-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .genome-section {
+            margin-bottom: 16px;
+        }
+
+        .genome-section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .genome-section-title i {
+            color: var(--accent);
+        }
+
+        .genome-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            margin: 4px 0;
+            background: var(--bg-hover);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .genome-item:hover {
+            background: var(--bg-active);
+        }
+
+        .genome-item.active {
+            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .genome-item-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        .genome-item-icon.chr { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+        .genome-item-icon.gene { background: linear-gradient(135deg, var(--accent), var(--accent-hover)); }
+        .genome-item-icon.variant { background: linear-gradient(135deg, var(--danger), #dc2626); }
+        .genome-item-icon.track { background: linear-gradient(135deg, var(--warning), var(--danger)); }
+
+        .genome-item-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .genome-item-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .genome-item-meta {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* Main Viewer */
+        .genome-viewer {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-dark);
+            overflow: hidden;
+        }
+
+        .viewer-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .viewer-location {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .location-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius-sm);
+        }
+
+        .location-input i {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .location-input input {
+            width: 200px;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-family: monospace;
+        }
+
+        .location-presets {
+            display: flex;
+            gap: 8px;
+        }
+
+        .preset-btn {
+            padding: 6px 12px;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius-sm);
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .preset-btn:hover {
+            background: var(--bg-active);
+            color: var(--text-primary);
+        }
+
+        .preset-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        .viewer-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .viewer-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: var(--bg-hover);
+            border-radius: var(--border-radius-sm);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .viewer-btn:hover {
+            background: var(--bg-active);
+            color: var(--text-primary);
+        }
+
+        .viewer-btn.primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .zoom-slider {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 12px;
+        }
+
+        .zoom-slider input[type="range"] {
+            width: 120px;
+            accent-color: var(--primary);
+        }
+
+        .zoom-value {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            min-width: 40px;
+        }
+
+        .genome-canvas {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chromosome-view {
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .chromosome-ideogram {
+            width: 600px;
+            height: 40px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .chromosome-band {
+            position: absolute;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 50%, var(--primary) 100%);
+            opacity: 0.7;
+            border-radius: 20px;
+        }
+
+        .chromosome-pointer {
+            position: absolute;
+            top: -8px;
+            width: 4px;
+            height: calc(100% + 16px);
+            background: var(--accent);
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .chromosome-pointer::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid var(--accent);
+        }
+
+        .chromosome-labels {
+            display: flex;
+            justify-content: space-between;
+            width: 600px;
+            margin-top: 8px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .genome-tracks {
+            position: absolute;
+            top: 80px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+
+        .track-row {
+            display: flex;
+            align-items: stretch;
+            border-bottom: 1px solid var(--border);
+            min-height: 80px;
+        }
+
+        .track-label {
+            width: 120px;
+            padding: 12px;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .track-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .track-type {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .track-content {
+            flex: 1;
+            padding: 8px;
+            position: relative;
+            background: var(--bg-dark);
+        }
+
+        .gene-feature {
+            position: absolute;
+            height: 24px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 8px;
+        }
+
+        .gene-feature:hover {
+            transform: scaleY(1.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .variant-marker {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            transform: translateX(-50%);
+        }
+
+        .variant-marker.snps { background: var(--danger); }
+        .variant-marker.indels { background: var(--warning); }
+        .variant-marker.cnvs { background: var(--info); }
+
+        .coverage-graph {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+        }
+
+        .coverage-path {
+            fill: none;
+            stroke: var(--accent);
+            stroke-width: 2;
+        }
+
+        /* Right Panel */
+        .genome-info-panel {
+            background: var(--bg-card);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .info-section {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .info-section-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-section-title i {
+            color: var(--primary);
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .info-value {
+            font-size: 0.8rem;
+            font-weight: 500;
+            font-family: monospace;
+        }
+
+        .variant-table {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .variant-row {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: var(--bg-hover);
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .variant-row:hover {
+            background: var(--bg-active);
+        }
+
+        .variant-type-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .variant-type-badge.snp {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .variant-type-badge.indel {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .variant-type-badge.sv {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8b5cf6;
+        }
+
+        .variant-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .variant-location {
+            font-size: 0.85rem;
+            font-weight: 500;
+            font-family: monospace;
+        }
+
+        .variant-genes {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .variant-impact {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .variant-impact.high {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .variant-impact.medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .variant-impact.low {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        /* Demo Data Indicator */
+        .demo-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: var(--border-radius);
+            color: #fff;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边导航栏 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" stroke="url(#grad1)" stroke-width="3"/>
+                        <path d="M12 20 Q16 14, 20 20 T28 20" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <circle cx="14" cy="18" r="2" fill="#00D4AA"/>
+                        <circle cx="26" cy="18" r="2" fill="#00D4AA"/>
+                        <path d="M15 25 Q20 28, 25 25" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">BioCore</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="projects.html" class="nav-item">
+                    <i class="fas fa-folder-open"></i>
+                    <span>项目</span>
+                </a>
+                <a href="data.html" class="nav-item">
+                    <i class="fas fa-database"></i>
+                    <span>数据管理</span>
+                </a>
+                <a href="workflow-designer.html" class="nav-item">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>工作流</span>
+                </a>
+                <a href="visualize.html" class="nav-item active">
+                    <i class="fas fa-dna"></i>
+                    <span>可视化</span>
+                </a>
+                <a href="tools.html" class="nav-item">
+                    <i class="fas fa-wrench"></i>
+                    <span>工具</span>
+                </a>
+                <a href="results.html" class="nav-item">
+                    <i class="fas fa-file-medical"></i>
+                    <span>结果查看</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>报告中心</span>
+                </a>
+                <a href="team.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>团队管理</span>
+                </nav>
+
+            <div class="sidebar-footer">
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </a>
+                <div class="user-profile">
+                    <div class="avatar">李</div>
+                    <div class="user-info">
+                        <span class="user-name">李博士</span>
+                        <span class="user-role">研究人员</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部栏 -->
+            <header class="topbar">
+                <div class="breadcrumb">
+                    <a href="index.html">首页</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <a href="visualize.html">可视化</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span class="current">基因组浏览器</span>
+                </div>
+                <div class="topbar-actions">
+                    <button class="action-btn" title="刷新">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="action-btn" title="导出">
+                        <i class="fas fa-file-export"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 基因组浏览器容器 -->
+            <div class="genome-container">
+                <!-- 左侧：导航面板 -->
+                <div class="genome-sidebar">
+                    <div class="genome-sidebar-header">
+                        <h3><i class="fas fa-list"></i> 导航</h3>
+                    </div>
+                    <div class="genome-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="搜索基因/位置...">
+                    </div>
+                    <div class="genome-list">
+                        <div class="genome-section">
+                            <div class="genome-section-title">
+                                <i class="fas fa-dna"></i> 染色体
+                            </div>
+                            <div class="genome-item active" onclick="loadChromosome('chr1')">
+                                <div class="genome-item-icon chr">
+                                    <i class="fas fa-dna"></i>
+                                </div>
+                                <div class="genome-item-info">
+                                    <span class="genome-item-name">chr1</span>
+                                    <span class="genome-item-meta">249,250,621 bp</span>
+                                </div>
+                            </div>
+                            <div class="genome-item" onclick="loadChromosome('chr2')">
+                                <div class="genome-item-icon chr">
+                                    <i class="fas fa-dna"></i>
+                                </div>
+                                <div class="genome-item-info">
+                                    <span class="genome-item-name">chr2</span>
+                                    <span class="genome-item-meta">243,199,373 bp</span>
+                                </div>
+                            </div>
+                            <div class="genome-item" onclick="loadChromosome('chr3')">
+                                <div class="genome-item-icon chr">
+                                    <i class="fas fa-dna"></i>
+                                </div>
+                                <div class="genome-item-info">
+                                    <span class="genome-item-name">chr3</span>
+                                    <span class="genome-item-meta">198,022,430 bp</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="genome-section">
+                            <div class="genome-section-title">
+                                <i class="fas fa-gene"></i> 基因
+                            </div>
+                            <div class="genome-item" onclick="navigateToGene('BRCA1')">
+                                <div class="genome-item-icon gene">
+                                    <i class="fas fa-gene"></i>
+                                </div>
+                                <div class="genome-item-info">
+                                    <span class="genome-item-name">BRCA1</span>
+                                    <span class="genome-item-meta">chr17:43,044,173-43,125,482</span>
+                                </div>
+                            </div>
+                            <div class="genome-item" onclick="navigateToGene('TP53')">
+                                <div class="genome-item-icon gene">
+                                    <i class="fas fa-gene"></i>
+                                </div>
+                                <div class="genome-item-info">
+                                    <span class="genome-item-name">TP53</span>
+                                    <span class="genome-item-meta">chr17:7,666,402-7,687,424</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="genome-section">
+                            <div class="genome-section-title">
+                                <i class="fas fa-exclamation-triangle"></i> 变异
+                            </div>
+                            <div class="genome-item" onclick="showVariants()">
+                                <div class="genome-item-icon variant">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="genome-item-info">
+                                    <span class="genome-item-name">已加载变异</span>
+                                    <span class="genome-item-meta">156 个变异位点</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="genome-section">
+                            <div class="genome-section-title">
+                                <i class="fas fa-wave-square"></i> 轨道
+                            </div>
+                            <div class="genome-item" onclick="toggleTrack('coverage')">
+                                <div class="genome-item-icon track">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="genome-item-info">
+                                    <span class="genome-item-name">测序覆盖度</span>
+                                    <span class="genome-item-meta">已启用</span>
+                                </div>
+                            </div>
+                            <div class="genome-item" onclick="toggleTrack('genes')">
+                                <div class="genome-item-icon track">
+                                    <i class="fas fa-gene"></i>
+                                </div>
+                                <div class="genome-item-info">
+<span class="genome-item-name">基因注释</span>
+                                    <span class="genome-item-meta">RefSeq</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 中央：基因组视图 -->
+                <div class="genome-viewer">
+                    <div class="viewer-toolbar">
+                        <div class="viewer-location">
+                            <div class="location-input">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <input type="text" value="chr17:43,044,173-43,125,482" id="locationInput">
+                            </div>
+                            <div class="location-presets">
+                                <button class="preset-btn" onclick="zoomIn()">+</button>
+                                <button class="preset-btn" onclick="zoomOut()">-</button>
+                                <button class="preset-btn active" onclick="fitView()">适应</button>
+                            </div>
+                        </div>
+                        <div class="viewer-controls">
+                            <button class="viewer-btn" title="后退" onclick="navigateBack()">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button class="viewer-btn" title="前进" onclick="navigateForward()">
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                            <button class="viewer-btn" title="添加轨道" onclick="addTrack()">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="viewer-btn primary" title="保存视图" onclick="saveView()">
+                                <i class="fas fa-save"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="genome-canvas" id="genomeCanvas">
+                        <!-- 染色体示意图 -->
+                        <div class="chromosome-view">
+                            <div class="chromosome-ideogram" id="chromosomeIdeogram">
+                                <div class="chromosome-pointer" id="chromosomePointer"></div>
+                            </div>
+                            <div class="chromosome-labels">
+                                <span>0</span>
+                                <span>50M</span>
+                                <span>100M</span>
+                                <span>150M</span>
+                                <span>200M</span>
+                                <span>250M</span>
+                            </div>
+                        </div>
+
+                        <!-- 基因轨道 -->
+                        <div class="genome-tracks" id="genomeTracks">
+                            <div class="track-row">
+                                <div class="track-label">
+                                    <span class="track-name">基因注释</span>
+                                    <span class="track-type">RefSeq</span>
+                                </div>
+                                <div class="track-content" id="geneTrackContent">
+                                    <!-- 基因将通过JS动态渲染 -->
+                                </div>
+                            </div>
+                            <div class="track-row">
+                                <div class="track-label">
+                                    <span class="track-name">变异</span>
+                                    <span class="track-type">VCF</span>
+                                </div>
+                                <div class="track-content" id="variantTrackContent">
+                                    <!-- 变异将通过JS动态渲染 -->
+                                </div>
+                            </div>
+                            <div class="track-row">
+                                <div class="track-label">
+                                    <span class="track-name">覆盖度</span>
+                                    <span class="track-type">BAM</span>
+                                </div>
+                                <div class="track-content" id="coverageTrackContent">
+                                    <svg class="coverage-graph" width="100%" height="100%">
+                                        <path class="coverage-path" id="coveragePath" d=""></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧：信息面板 -->
+                <div class="genome-info-panel">
+                    <div class="info-section">
+                        <div class="info-section-title">
+                            <i class="fas fa-info-circle"></i> 当前区域
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">染色体</span>
+                            <span class="info-value">chr17</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">起始位置</span>
+                            <span class="info-value">43,044,173</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">结束位置</span>
+                            <span class="info-value">43,125,482</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">窗口大小</span>
+                            <span class="info-value">81,309 bp</span>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-section-title">
+                            <i class="fas fa-gene"></i> BRCA1 基因信息
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">基因类型</span>
+                            <span class="info-value">蛋白编码</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">链方向</span>
+                            <span class="info-value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">转录本</span>
+                            <span class="info-value">24 个</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">外显子</span>
+                            <span class="info-value">24 个</span>
+                        </div>
+                    </div>
+
+                    <div style="flex: 1; overflow-y: auto;">
+                        <div class="info-section" style="border-bottom: none;">
+                            <div class="info-section-title">
+                                <i class="fas fa-exclamation-circle"></i> 附近变异 (Top 5)
+                            </div>
+                            <div class="variant-table">
+                                <div class="variant-row" onclick="selectVariant('rs4986850')">
+                                    <span class="variant-type-badge snp">SNP</span>
+                                    <div class="variant-info">
+                                        <span class="variant-location">17:43091171:C>T</span>
+                                        <span class="variant-genes">BRCA1:c.4822C>G</span>
+                                    </div>
+                                    <span class="variant-impact high">HIGH</span>
+                                </div>
+                                <div class="variant-row" onclick="selectVariant('rs16942')">
+                                    <span class="variant-type-badge snp">SNP</span>
+                                    <div class="variant-info">
+                                        <span class="variant-location">17:43091238:G>A</span>
+                                        <span class="variant-genes">BRCA1:c.4785C>T</span>
+                                    </div>
+                                    <span class="variant-impact medium">MOD</span>
+                                </div>
+                                <div class="variant-row" onclick="selectVariant('rs1799950')">
+                                    <span class="variant-type-badge snp">SNP</span>
+                                    <div class="variant-info">
+                                        <span class="variant-location">17:43094482:G>A</span>
+                                        <span class="variant-genes">BRCA1:c.4417C>T</span>
+                                    </div>
+                                    <span class="variant-impact high">HIGH</span>
+                                </div>
+                                <div class="variant-row" onclick="selectVariant('del1234')">
+                                    <span class="variant-type-badge indel">DEL</span>
+                                    <div class="variant-info">
+                                        <span class="variant-location">17:43102453:GA>1</span>
+                                        <span class="variant-genes">BRCA1:c.1352delG</span>
+                                    </div>
+                                    <span class="variant-impact high">HIGH</span>
+                                </div>
+                                <div class="variant-row" onclick="selectVariant('rs7563456')">
+                                    <span class="variant-type-badge snp">SNP</span>
+                                    <div class="variant-info">
+                                        <span class="variant-location">17:43115782:T>C</span>
+                                        <span class="variant-genes">BRCA1:c.1214A>G</span>
+                                    </div>
+                                    <span class="variant-impact low">LOW</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 演示数据提示 -->
+    <div class="demo-indicator">
+        <i class="fas fa-info-circle"></i>
+        <span>基因组浏览器演示模式 - 使用模拟数据</span>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // 基因组浏览器演示数据
+        const geneData = [
+            { name: 'BRCA1', start: 200, end: 500, color: '#00D4AA' },
+            { name: 'BRCA1-IRQL', start: 280, end: 350, color: '#667eea' },
+            { name: 'NBR2', start: 520, end: 680, color: '#764ba2' }
+        ];
+
+        const variantData = [
+            { position: 150, type: 'snps' },
+            { position: 280, type: 'snps' },
+            { position: 320, type: 'indels' },
+            { position: 450, type: 'snps' },
+            { position: 520, type: 'cnvs' },
+            { position: 600, type: 'snps' },
+            { position: 680, type: 'indels' }
+        ];
+
+        function renderGeneTrack() {
+            const track = document.getElementById('geneTrackContent');
+            track.innerHTML = '';
+            
+            geneData.forEach(gene => {
+                const feature = document.createElement('div');
+                feature.className = 'gene-feature';
+                feature.style.left = gene.start + '%';
+                feature.style.width = (gene.end - gene.start) + '%';
+                feature.style.background = gene.color;
+                feature.textContent = gene.name;
+                feature.onclick = () => showGeneInfo(gene.name);
+                track.appendChild(feature);
+            });
+        }
+
+        function renderVariantTrack() {
+            const track = document.getElementById('variantTrackContent');
+            track.innerHTML = '';
+            
+            variantData.forEach(variant => {
+                const marker = document.createElement('div');
+                marker.className = 'variant-marker ' + variant.type;
+                marker.style.left = variant.position + '%';
+                marker.title = '点击查看详情';
+                marker.onclick = () => showVariantInfo(variant);
+                track.appendChild(marker);
+            });
+        }
+
+        function renderCoverageGraph() {
+            const path = document.getElementById('coveragePath');
+            let d = 'M 0,50 ';
+            
+            for (let i = 0; i <= 100; i++) {
+                const y = 50 - Math.sin(i * 0.3) * 20 - Math.random() * 10;
+                d += 'L ' + i + '%,' + y + ' ';
+            }
+            
+            path.setAttribute('d', d);
+        }
+
+        function loadChromosome(chr) {
+            document.querySelectorAll('.genome-item').forEach(item => item.classList.remove('active'));
+            event.target.closest('.genome-item').classList.add('active');
+            showNotification('正在加载 ' + chr + '...', 'info');
+            setTimeout(() => showNotification(chr + ' 加载完成', 'success'), 500);
+        }
+
+        function navigateToGene(geneName) {
+            document.getElementById('locationInput').value = geneName + ' (chr17)';
+            showNotification('跳转到 ' + geneName, 'info');
+        }
+
+        function zoomIn() {
+            showNotification('放大视图', 'info');
+        }
+
+        function zoomOut() {
+            showNotification('缩小视图', 'info');
+        }
+
+        function fitView() {
+            showNotification('适应窗口大小', 'info');
+        }
+
+        function navigateBack() {
+            showNotification('后退一步', 'info');
+        }
+
+        function navigateForward() {
+            showNotification('前进一步', 'info');
+        }
+
+        function addTrack() {
+            showNotification('添加轨道功能', 'info');
+        }
+
+        function saveView() {
+            showNotification('视图已保存', 'success');
+        }
+
+        function showVariants() {
+            showNotification('显示变异列表', 'info');
+        }
+
+        function toggleTrack(trackName) {
+            showNotification('切换 ' + trackName + ' 轨道', 'info');
+        }
+
+        function showGeneInfo(geneName) {
+            showNotification('显示基因信息: ' + geneName, 'info');
+        }
+
+        function showVariantInfo(variant) {
+            showNotification('显示变异详情: ' + variant.position, 'info');
+        }
+
+        function selectVariant(variantId) {
+            showNotification('选中变异: ' + variantId, 'info');
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            renderGeneTrack();
+            renderVariantTrack();
+            renderCoverageGraph();
+        });
+    </script>
+</body>
+</html>

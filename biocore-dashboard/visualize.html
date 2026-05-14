@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioCore - 可视化中心</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .viz-hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .viz-hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .viz-hero p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .viz-cards-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            padding: 48px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .viz-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .viz-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .viz-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.2);
+        }
+
+        .viz-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .viz-card-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 24px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .viz-card:hover .viz-card-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .viz-card-icon.genome {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            color: var(--primary);
+        }
+
+        .viz-card-icon.charts {
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.2), rgba(16, 185, 129, 0.2));
+            color: var(--accent);
+        }
+
+        .viz-card-icon::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            opacity: 0;
+            z-index: -1;
+            filter: blur(20px);
+            transition: opacity 0.4s ease;
+        }
+
+        .viz-card:hover .viz-card-icon::after {
+            opacity: 0.4;
+        }
+
+        .viz-card h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .viz-card p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .viz-card-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .viz-feature-tag {
+            padding: 6px 12px;
+            background: var(--bg-hover);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .viz-card:hover .viz-feature-tag {
+            background: rgba(102, 126, 234, 0.15);
+            color: var(--primary);
+        }
+
+        .viz-card-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 30px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .viz-card-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .viz-card:hover .viz-card-btn::before {
+            left: 100%;
+        }
+
+        .viz-card-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        /* 动画入场 */
+        .viz-card {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .viz-card:nth-child(1) { animation-delay: 0.1s; }
+        .viz-card:nth-child(2) { animation-delay: 0.2s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 脉动动画 */
+        .pulse-ring {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .viz-card:hover .pulse-ring {
+            animation: pulseRing 1.5s ease-out infinite;
+        }
+
+        .viz-card:nth-child(2):hover .pulse-ring {
+            border-color: var(--accent);
+        }
+
+        @keyframes pulseRing {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* 浮动装饰 */
+        .floating-icon {
+            position: absolute;
+            opacity: 0.1;
+            font-size: 6rem;
+            color: var(--primary);
+            pointer-events: none;
+        }
+
+        .floating-icon:nth-child(1) {
+            top: 10%;
+            left: 5%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-icon:nth-child(2) {
+            bottom: 10%;
+            right: 5%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .viz-cards-container {
+                grid-template-columns: 1fr;
+                padding: 24px;
+            }
+
+            .viz-hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .viz-card {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边导航栏 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" stroke="url(#grad1)" stroke-width="3"/>
+                        <path d="M12 20 Q16 14, 20 20 T28 20" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <circle cx="14" cy="18" r="2" fill="#00D4AA"/>
+                        <circle cx="26" cy="18" r="2" fill="#00D4AA"/>
+                        <path d="M15 25 Q20 28, 25 25" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">BioCore</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="projects.html" class="nav-item">
+                    <i class="fas fa-folder-open"></i>
+                    <span>项目</span>
+                </a>
+                <a href="data.html" class="nav-item">
+                    <i class="fas fa-database"></i>
+                    <span>数据管理</span>
+                </a>
+                <a href="workflow-designer.html" class="nav-item">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>工作流</span>
+                </a>
+                <a href="visualize.html" class="nav-item active">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>可视化</span>
+                </a>
+                <a href="tools.html" class="nav-item">
+                    <i class="fas fa-wrench"></i>
+                    <span>工具</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>报告中心</span>
+                </a>
+                <a href="team.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>团队管理</span>
+                </a>
+                <a href="results.html" class="nav-item">
+                    <i class="fas fa-file-medical"></i>
+                    <span>结果查看</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </a>
+                <div class="user-profile">
+                    <div class="avatar">李</div>
+                    <div class="user-info">
+                        <span class="user-name">李博士</span>
+                        <span class="user-role">研究人员</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部栏 -->
+            <header class="topbar">
+                <div class="breadcrumb">
+                    <a href="index.html">首页</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span class="current">可视化中心</span>
+                </div>
+                <div class="topbar-actions">
+                    <button class="action-btn" title="帮助">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 内容区域 -->
+            <div class="content" style="padding: 0; overflow-y: auto;">
+                <!-- 浮动装饰 -->
+                <i class="fas fa-dna floating-icon"></i>
+                <i class="fas fa-chart-bar floating-icon"></i>
+
+                <!-- 标题区域 -->
+                <div class="viz-hero">
+                    <h1><i class="fas fa-chart-pie" style="margin-right: 12px;"></i>可视化中心</h1>
+                    <p>选择您想要查看的可视化类型，进入对应的分析工具</p>
+                </div>
+
+                <!-- 卡片容器 -->
+                <div class="viz-cards-container">
+                    <!-- 基因组浏览器卡片 -->
+                    <div class="viz-card" onclick="window.location.href='visualize-genome.html'">
+                        <div class="viz-card-icon genome">
+                            <i class="fas fa-dna"></i>
+                            <div class="pulse-ring"></div>
+                        </div>
+                        <h2>基因组浏览器</h2>
+                        <p>交互式查看基因组序列、基因注释、变异位点和测序覆盖度</p>
+                        <div class="viz-card-features">
+                            <span class="viz-feature-tag">IGV风格</span>
+                            <span class="viz-feature-tag">基因轨道</span>
+                            <span class="viz-feature-tag">变异标记</span>
+                            <span class="viz-feature-tag">缩放导航</span>
+                        </div>
+                        <button class="viz-card-btn">
+                            <i class="fas fa-arrow-right"></i>
+                            进入基因组浏览器
+                        </button>
+                    </div>
+
+                    <!-- 分析图表卡片 -->
+                    <div class="viz-card" onclick="window.location.href='visualize-charts.html'">
+                        <div class="viz-card-icon charts">
+                            <i class="fas fa-chart-area"></i>
+                            <div class="pulse-ring"></div>
+                        </div>
+                        <h2>分析图表</h2>
+                        <p>查看热图、火山图、进化树、PCA图等生物信息分析专业图表</p>
+                        <div class="viz-card-features">
+                            <span class="viz-feature-tag">热图</span>
+                            <span class="viz-feature-tag">火山图</span>
+                            <span class="viz-feature-tag">进化树</span>
+                            <span class="viz-feature-tag">PCA图</span>
+                        </div>
+                        <button class="viz-card-btn">
+                            <i class="fas fa-arrow-right"></i>
+                            查看分析图表
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 演示数据提示 -->
+    <div class="demo-indicator">
+        <i class="fas fa-info-circle"></i>
+        <span>可视化中心 - 选择您需要的可视化工具</span>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // 卡片点击涟漪效果
+        document.querySelectorAll('.viz-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const ripple = document.createElement('div');
+                ripple.style.cssText = `
+                    position: absolute;
+                    width: 20px;
+                    height: 20px;
+                    background: rgba(255,255,255,0.3);
+                    border-radius: 50%;
+                    transform: translate(-50%, -50%);
+                    left: ${x}px;
+                    top: ${y}px;
+                    animation: ripple 0.6s ease-out;
+                    pointer-events: none;
+                `;
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // 添加涟漪动画样式
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: translate(-50%, -50%) scale(20);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

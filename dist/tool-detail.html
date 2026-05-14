@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioCore - 工具详情</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边导航栏 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" stroke="url(#grad1)" stroke-width="3"/>
+                        <path d="M12 20 Q16 14, 20 20 T28 20" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <circle cx="14" cy="18" r="2" fill="#00D4AA"/>
+                        <circle cx="26" cy="18" r="2" fill="#00D4AA"/>
+                        <path d="M15 25 Q20 28, 25 25" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">BioCore</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="projects.html" class="nav-item">
+                    <i class="fas fa-folder-open"></i>
+                    <span>项目</span>
+                </a>
+                <a href="data.html" class="nav-item">
+                    <i class="fas fa-database"></i>
+                    <span>数据管理</span>
+                </a>
+                
+                <a href="workflow-designer.html" class="nav-item">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>工作流</span>
+                </a>
+                <a href="visualize.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>可视化</span>
+                </a>
+                <a href="tools.html" class="nav-item active">
+                    <i class="fas fa-wrench"></i>
+                    <span>工具</span>
+                </a>
+                <a href="results.html" class="nav-item">
+                    <i class="fas fa-file-medical"></i>
+                    <span>结果查看</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>报告中心</span>
+                </a>
+                <a href="team.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>团队管理</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </a>
+                <div class="user-profile">
+                    <div class="avatar">李</div>
+                    <div class="user-info">
+                        <span class="user-name">李博士</span>
+                        <span class="user-role">研究人员</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部栏 -->
+            <header class="topbar">
+                <div class="breadcrumb">
+                    <a href="tools.html">分析工具</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span id="toolBreadcrumb">FastQC</span>
+                </div>
+                <div class="topbar-actions">
+                    <button class="action-btn" title="保存配置">
+                        <i class="fas fa-save"></i>
+                    </button>
+                    <button class="action-btn" title="帮助">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 内容区域 -->
+            <div class="content">
+                <div class="tool-detail-layout">
+                    <!-- 左侧：工具信息与参数配置 -->
+                    <div class="tool-detail-main">
+                        <!-- 工具信息卡片 -->
+                        <div class="tool-info-card">
+                            <div class="tool-info-header">
+                                <div class="tool-info-icon" id="toolIcon">
+                                    <i class="fas fa-chart-pie"></i>
+                                </div>
+                                <div class="tool-info-title">
+                                    <h1 id="toolName">FastQC</h1>
+                                    <div class="tool-meta">
+                                        <span class="tool-version" id="toolVersion">v0.11.9</span>
+                                        <span class="tool-category" id="toolCategory">序列工具</span>
+                                    </div>
+                                </div>
+                                <button class="tool-favorite-btn" id="favoriteBtn">
+                                    <i class="far fa-star"></i>
+                                    收藏
+                                </button>
+</div>
+                            <p class="tool-description" id="toolDescription">
+                                FastQC是一款用于评估高通量测序数据质量的工具。它提供了一套模块化的分析，可以快速检查测序数据的质量，包括碱基质量分数、GC含量分布、序列长度分布、接头污染等指标。
+                            </p>
+                            <div class="tool-stats">
+                                <div class="stat-item">
+                                    <span class="stat-value" id="runCount">1,234</span>
+                                    <span class="stat-label">运行次数</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="avgTime">2 min</span>
+                                    <span class="stat-label">平均时间</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value">P0</span>
+                                    <span class="stat-label">优先级</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 输入文件配置 -->
+                        <div class="config-section">
+                            <h2 class="section-title">
+                                <i class="fas fa-file-import"></i>
+                                输入文件
+                            </h2>
+                            <div class="config-card">
+                                <div class="input-file-list" id="inputFileList">
+                                    <div class="input-file-item" data-input="reads">
+                                        <div class="input-header">
+                                            <span class="input-label">测序文件 (FASTQ) <span class="required">*</span></span>
+                                            <button class="btn-add-file" id="addReadsBtn">
+                                                <i class="fas fa-plus"></i> 添加文件
+                                            </button>
+                                        </div>
+                                        <div class="selected-files" id="selectedReads">
+                                            <div class="empty-state-mini">
+                                                <i class="fas fa-cloud-upload-alt"></i>
+                                                <span>点击添加或拖拽文件到此处</span>
+                                            </div>
+                                        </div>
+                                        <div class="input-options">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="pairedEnd">
+                                                <span>双端测序 (Paired-End)</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="input-file-item" data-input="reference" style="display: none;">
+                                        <div class="input-header">
+                                            <span class="input-label">参考基因组</span>
+                                            <button class="btn-add-file">
+                                                <i class="fas fa-plus"></i> 添加文件
+                                            </button>
+                                        </div>
+                                        <div class="selected-files" id="selectedReference">
+                                            <div class="empty-state-mini">
+                                                <i class="fas fa-cloud-upload-alt"></i>
+                                                <span>可选 - 点击添加</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 参数配置 -->
+                        <div class="config-section">
+                            <h2 class="section-title">
+                                <i class="fas fa-sliders-h"></i>
+                                参数配置
+                            </h2>
+                            <div class="config-card">
+                                <div class="param-group">
+                                    <h3 class="param-group-title">基本参数</h3>
+                                    <div class="param-grid">
+                                        <div class="param-item">
+                                            <label>基因组长名称</label>
+                                            <select id="longReads">
+                                                <option value="auto">自动检测</option>
+                                                <option value="pacbio">PacBio HiFi</option>
+                                                <option value="nanopore">Nanopore</option>
+                                                <option value="none">禁用</option>
+                                            </select>
+                                        </div>
+                                        <div class="param-item">
+                                            <label>线程数</label>
+                                            <input type="number" id="threads" value="4" min="1" max="32">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="param-group">
+                                    <h3 class="param-group-title">质量控制选项</h3>
+                                    <div class="param-grid">
+                                        <div class="param-item">
+                                            <label>质量编码</label>
+                                            <select id="qualityEncoding">
+                                                <option value="auto">自动检测</option>
+                                                <option value="phred33">Phred+33 (Illumina 1.8+)</option>
+                                                <option value="phred64">Phred+64 (Illumina 1.5)</option>
+                                            </select>
+                                        </div>
+                                        <div class="param-item">
+                                            <label>质量阈值</label>
+                                            <input type="number" id="qualityThreshold" value="20" min="0" max="40">
+                                        </div>
+                                        <div class="param-item full-width">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="adaptersRemoved" checked>
+                                                <span>去除接头序列</span>
+                                            </label>
+                                        </div>
+                                        <div class="param-item full-width">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="contaminants">
+                                                <span>污染序列检测</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="param-group">
+                                    <h3 class="param-group-title advanced-toggle">
+                                        <i class="fas fa-chevron-down"></i>
+                                        高级参数
+                                    </h3>
+                                    <div class="param-grid advanced-params" style="display: none;">
+                                        <div class="param-item">
+                                            <label>KMER长度</label>
+                                            <input type="number" id="kmerLength" value="7" min="2" max="10">
+                                        </div>
+                                        <div class="param-item">
+                                            <label>最大内存 (MB)</label>
+                                            <input type="number" id="maxMemory" value="1024" min="256" max="8192">
+                                        </div>
+                                        <div class="param-item full-width">
+                                            <label>额外参数</label>
+                                            <input type="text" id="extraParams" placeholder="输入额外参数...">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 输出配置 -->
+                        <div class="config-section">
+                            <h2 class="section-title">
+                                <i class="fas fa-file-export"></i>
+                                输出配置
+                            </h2>
+                            <div class="config-card">
+                                <div class="output-options">
+                                    <div class="param-item">
+                                        <label>输出目录</label>
+                                        <div class="output-path">
+<input type="text" id="outputPath" value="/projects/wgs-2024-001/results/fastqc" readonly>
+                                            <button class="btn-browse" title="浏览">
+                                                <i class="fas fa-folder-open"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="param-item">
+                                        <label>输出文件名后缀</label>
+                                        <input type="text" id="outputSuffix" value="_fastqc" placeholder="_fastqc">
+                                    </div>
+                                    <div class="param-item">
+                                        <label>关联项目</label>
+                                        <select id="outputProject">
+                                            <option value="proj-001">全基因组测序分析</option>
+                                            <option value="proj-002">肝癌RNA-seq差异表达</option>
+                                            <option value="proj-003">ChIP-seq调控网络</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 右侧：帮助与历史 -->
+                    <div class="tool-detail-sidebar">
+                        <!-- 工具帮助 -->
+                        <div class="help-card">
+                            <h3 class="card-title">
+                                <i class="fas fa-info-circle"></i>
+                                使用帮助
+                            </h3>
+                            <div class="help-content">
+                                <div class="help-section">
+                                    <h4>工具简介</h4>
+                                    <p>FastQC是一款广泛使用的测序数据质量评估工具，提供直观的HTML报告。</p>
+                                </div>
+                                <div class="help-section">
+                                    <h4>输入要求</h4>
+                                    <ul>
+                                        <li>支持 FASTQ, FASTQ.gz 格式</li>
+                                        <li>单端或双端测序数据</li>
+                                        <li>建议文件大小不超过10GB</li>
+                                    </ul>
+                                </div>
+                                <div class="help-section">
+                                    <h4>输出说明</h4>
+                                    <ul>
+                                        <li>HTML报告：质量评估可视化</li>
+                                        <li>ZIP文件：原始统计数据</li>
+                                    </ul>
+                                </div>
+                                <div class="help-section">
+                                    <h4>引用</h4>
+                                    <code>Andrews S. (2010). FastQC: a quality control tool for high throughput sequence data.</code>
+                                </div>
+                            </div>
+                            <a href="#" class="help-link">
+                                <i class="fas fa-book"></i>
+                                查看完整文档
+                            </a>
+                        </div>
+
+                        <!-- 运行记录 -->
+                        <div class="history-card">
+                            <h3 class="card-title">
+                                <i class="fas fa-history"></i>
+                                最近运行
+                            </h3>
+                            <div class="history-list">
+                                <div class="history-item">
+                                    <div class="history-status success">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="history-info">
+                                        <span class="history-name">sample_001_fastqc</span>
+                                        <span class="history-time">2024-05-10 14:30</span>
+                                    </div>
+                                    <button class="history-action" title="查看结果">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </button>
+                                </div>
+                                <div class="history-item">
+                                    <div class="history-status success">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="history-info">
+                                        <span class="history-name">sample_002_fastqc</span>
+                                        <span class="history-time">2024-05-10 14:25</span>
+                                    </div>
+                                    <button class="history-action" title="查看结果">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </button>
+                                </div>
+                                <div class="history-item">
+                                    <div class="history-status running">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                    </div>
+                                    <div class="history-info">
+                                        <span class="history-name">sample_003_fastqc</span>
+                                        <span class="history-time">2024-05-11 16:40</span>
+                                    </div>
+                                    <button class="history-action" title="查看进度">
+                                        <i class="fas fa-chart-line"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <a href="#" class="view-all-link">
+                                查看全部运行记录
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </div>
+
+                        <!-- 快捷参数模板 -->
+                        <div class="template-card">
+                            <h3 class="card-title">
+                                <i class="fas fa-layer-group"></i>
+                                参数模板
+                            </h3>
+                            <div class="template-list">
+                                <div class="template-item">
+                                    <div class="template-info">
+                                        <span class="template-name">默认设置</span>
+                                        <span class="template-desc">适用于常规质控</span>
+                                    </div>
+                                    <button class="template-apply">应用</button>
+                                </div>
+                                <div class="template-item">
+                                    <div class="template-info">
+                                        <span class="template-name">严格模式</span>
+                                        <span class="template-desc">更严格的质量阈值</span>
+                                    </div>
+                                    <button class="template-apply">应用</button>
+                                </div>
+                                <div class="template-item">
+                                    <div class="template-info">
+                                        <span class="template-name">PacBio HiFi</span>
+                                        <span class="template-desc">长reads专用配置</span>
+                                    </div>
+                                    <button class="template-apply">应用</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 底部操作栏 -->
+                <div class="action-bar">
+                    <div class="action-bar-left">
+                        <button class="btn btn-secondary" id="saveConfigBtn">
+                            <i class="fas fa-save"></i>
+                            保存配置
+                        </button>
+                        <button class="btn btn-secondary" id="resetParamsBtn">
+                            <i class="fas fa-undo"></i>
+                            重置参数
+                        </button>
+                    </div>
+                    <div class="action-bar-right">
+                        <button class="btn btn-primary" id="runToolBtn">
+                            <i class="fas fa-play"></i>
+                            运行工具
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 文件选择模态框 -->
+    <div class="modal-overlay" id="fileSelectModal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h2><i class="fas fa-file-import"></i> 选择输入文件</h2>
+                <button class="modal-close" id="closeFileModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="file-filter">
+                    <input type="text" id="fileSearchInput" placeholder="搜索文件名...">
+                    <select id="fileTypeFilter">
+                        <option value="all">全部类型</option>
+                        <option value="fastq">FASTQ</option>
+                        <option value="bam">BAM</option>
+                        <option value="fasta">FASTA</option>
+                    </select>
+                </div>
+                <div class="file-list-container">
+                    <div class="file-list">
+                        <div class="file-item selectable" data-file="SRR1234567_1.fastq.gz" data-size="2.3 GB" data-type="fastq">
+                            <div class="file-checkbox">
+                                <input type="checkbox">
+                            </div>
+                            <div class="file-icon fastq">
+                                <i class="fas fa-file-code"></i>
+                            </div>
+                            <div class="file-info">
+                                <span class="file-name">SRR1234567_1.fastq.gz</span>
+                                <span class="file-meta">FASTQ · 2.3 GB · 更新于 2天前</span>
+                            </div>
+                        </div>
+                        <div class="file-item selectable" data-file="SRR1234567_2.fastq.gz" data-size="2.1 GB" data-type="fastq">
+                            <div class="file-checkbox">
+                                <input type="checkbox">
+                            </div>
+                            <div class="file-icon fastq">
+                                <i class="fas fa-file-code"></i>
+                            </div>
+                            <div class="file-info">
+                                <span class="file-name">SRR1234567_2.fastq.gz</span>
+                                <span class="file-meta">FASTQ · 2.1 GB · 更新于 2天前</span>
+                            </div>
+                        </div>
+                        <div class="file-item selectable selected" data-file="sample_control_R1.fastq.gz" data-size="1.8 GB" data-type="fastq">
+                            <div class="file-checkbox">
+                                <input type="checkbox" checked>
+                            </div>
+                            <div class="file-icon fastq">
+                                <i class="fas fa-file-code"></i>
+                            </div>
+                            <div class="file-info">
+                                <span class="file-name">sample_control_R1.fastq.gz</span>
+                                <span class="file-meta">FASTQ · 1.8 GB · 更新于 1周前</span>
+                            </div>
+                        </div>
+                        <div class="file-item selectable selected" data-file="sample_control_R2.fastq.gz" data-size="1.6 GB" data-type="fastq">
+                            <div class="file-checkbox">
+                                <input type="checkbox" checked>
+                            </div>
+                            <div class="file-icon fastq">
+                                <i class="fas fa-file-code"></i>
+                            </div>
+                            <div class="file-info">
+                                <span class="file-name">sample_control_R2.fastq.gz</span>
+                                <span class="file-meta">FASTQ · 1.6 GB · 更新于 1周前</span>
+                            </div>
+                        </div>
+                        <div class="file-item selectable" data-file="treatment_rep1.fastq.gz" data-size="2.0 GB" data-type="fastq">
+                            <div class="file-checkbox">
+                                <input type="checkbox">
+                            </div>
+                            <div class="file-icon fastq">
+                                <i class="fas fa-file-code"></i>
+                            </div>
+                            <div class="file-info">
+                                <span class="file-name">treatment_rep1.fastq.gz</span>
+                                <span class="file-meta">FASTQ · 2.0 GB · 更新于 3天前</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="selected-info">
+                    已选择 <span id="selectedCount">2</span> 个文件
+                </div>
+                <button class="btn btn-secondary" id="cancelFileSelect">取消</button>
+                <button class="btn btn-primary" id="confirmFileSelect">
+                    <i class="fas fa-check"></i> 确认选择
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 运行确认模态框 -->
+    <div class="modal-overlay" id="runConfirmModal">
+        <div class="modal modal-small">
+            <div class="modal-header">
+                <h2><i class="fas fa-play"></i> 确认运行</h2>
+                <button class="modal-close" id="closeRunModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="run-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">工具</span>
+                        <span class="summary-value" id="summaryTool">FastQC</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">输入文件</span>
+                        <span class="summary-value" id="summaryFiles">2 个文件</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">预计时间</span>
+                        <span class="summary-value" id="summaryTime">约 3-5 分钟</span>
+                    </div>
+                </div>
+                <p class="run-note">工具将在后台运行，完成后您将收到通知。</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelRun">取消</button>
+                <button class="btn btn-primary" id="confirmRun">
+                    <i class="fas fa-play"></i> 开始运行
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 成功提示 -->
+    <div class="toast toast-success" id="successToast">
+        <i class="fas fa-check-circle"></i>
+        <span>任务已提交，正在运行中...</span>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // 工具详情页面逻辑
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取URL参数
+            const urlParams = new URLSearchParams(window.location.search);
+            const toolId = urlParams.get('tool') || 'fastqc';
+
+            // 工具配置数据
+            const toolConfigs = {
+                fastqc: {
+                    name: 'FastQC',
+                    version: 'v0.11.9',
+                    category: '序列工具',
+                    icon: 'chart-pie',
+                    iconColor: '#00D4AA',
+                    description: 'FastQC是一款用于评估高通量测序数据质量的工具。它提供了一套模块化的分析，可以快速检查测序数据的质量，包括碱基质量分数、GC含量分布、序列长度分布、接头污染等指标。',
+                    stats: { runs: '1,234', avgTime: '2 min' },
+                    inputs: [{ id: 'reads', label: '测序文件 (FASTQ)', required: true, multiple: true }],
+                    showReference: false
+                },
+                blast: {
+                    name: 'BLAST',
+                    version: 'v2.13.0',
+                    category: '序列工具',
+                    icon: 'search',
+                    iconColor: '#667eea',
+                    description: 'BLAST (Basic Local Alignment Search Tool) 是最广泛使用的序列比对搜索工具，支持 nucleotide BLAST (blastn) 和 protein BLAST (blastp)。',
+                    stats: { runs: '856', avgTime: '5 min' },
+                    inputs: [
+                        { id: 'query', label: '查询序列 (FASTA)', required: true, multiple: false },
+                        { id: 'database', label: '数据库', required: true, multiple: false }
+                    ],
+                    showReference: false
+                },
+                bwa: {
+                    name: 'BWA-MEM',
+                    version: 'v0.7.17',
+                    category: '变异分析',
+                    icon: 'exchange-alt',
+                    iconColor: '#ff6b6b',
+                    description: 'BWA-MEM 是一款高性能的序列比对工具，特别适用于长reads (70bp-1Mbp) 的比对，支持 SAMtools 格式输出。',
+                    stats: { runs: '654', avgTime: '15 min' },
+                    inputs: [
+                        { id: 'reads', label: '测序文件 (FASTQ)', required: true, multiple: true },
+                        { id: 'reference', label: '参考基因组', required: true, multiple: false }
+                    ],
+                    showReference: true
+                },
+                gatk: {
+                    name: 'GATK HaplotypeCaller',
+                    version: 'v4.3.0',
+                    category: '变异分析',
+                    icon: 'dna',
+                    iconColor: '#ff6b6b',
+                    description: 'GATK HaplotypeCaller 是用于 SNP 和 Indel 检测的金标准工具，采用贝叶斯方法进行变异检测。',
+                    stats: { runs: '432', avgTime: '30 min' },
+                    inputs: [
+                        { id: 'bam', label: '比对文件 (BAM)', required: true, multiple: false },
+                        { id: 'reference', label: '参考基因组', required: true, multiple: false }
+                    ],
+                    showReference: true
+                },
+                star: {
+                    name: 'STAR',
+                    version: 'v2.7.10',
+                    category: '表达分析',
+                    icon: 'star',
+                    iconColor: '#ffd93d',
+                    description: 'STAR (Spliced Transcripts Alignment to a Reference) 是专门为 RNA-seq 设计的序列比对工具，支持剪接比对和融合基因检测。',
+                    stats: { runs: '521', avgTime: '20 min' },
+                    inputs: [
+                        { id: 'reads', label: '测序文件 (FASTQ)', required: true, multiple: true },
+                        { id: 'reference', label: '参考基因组', required: true, multiple: false }
+                    ],
+                    showReference: true
+                },
+                deseq2: {
+                    name: 'DESeq2',
+                    version: 'v1.38.0',
+                    category: '表达分析',
+                    icon: 'fire',
+                    iconColor: '#ffd93d',
+                    description: 'DESeq2 是一款用于差异表达分析的 R/Bioconductor 包，基于负二项分布模型进行样本间基因表达差异的统计检验。',
+                    stats: { runs: '389', avgTime: '10 min' },
+                    inputs: [
+                        { id: 'counts', label: '计数矩阵', required: true, multiple: false },
+                        { id: 'metadata', label: '样本元数据', required: true, multiple: false }
+                    ],
+                    showReference: false
+                }
+            };
+
+            // 更新页面内容
+            const config = toolConfigs[toolId] || toolConfigs.fastqc;
+            
+            document.getElementById('toolName').textContent = config.name;
+            document.getElementById('toolBreadcrumb').textContent = config.name;
+            document.getElementById('toolVersion').textContent = config.version;
+            document.getElementById('toolCategory').textContent = config.category;
+            document.getElementById('toolDescription').textContent = config.description;
+            document.getElementById('runCount').textContent = config.stats.runs;
+            document.getElementById('avgTime').textContent = config.stats.avgTime;
+            document.title = `BioCore - ${config.name}`;
+            
+            const toolIcon = document.getElementById('toolIcon');
+            toolIcon.innerHTML = `<i class="fas fa-${config.icon}"></i>`;
+            toolIcon.style.background = config.iconColor;
+
+            // 高级参数切换
+            const advancedToggle = document.querySelector('.advanced-toggle');
+            const advancedParams = document.querySelector('.advanced-params');
+            
+            advancedToggle.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                if (advancedParams.style.display === 'none') {
+                    advancedParams.style.display = 'grid';
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                } else {
+                    advancedParams.style.display = 'none';
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                }
+            });
+
+            // 收藏按钮
+            const favoriteBtn = document.getElementById('favoriteBtn');
+            favoriteBtn.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                if (icon.classList.contains('far')) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    this.classList.add('favorited');
+                } else {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    this.classList.remove('favorited');
+                }
+            });
+
+            // 文件选择模态框
+            const addReadsBtn = document.getElementById('addReadsBtn');
+            const fileSelectModal = document.getElementById('fileSelectModal');
+            
+            addReadsBtn.addEventListener('click', function() {
+                fileSelectModal.classList.add('active');
+            });
+
+            document.getElementById('closeFileModal').addEventListener('click', function() {
+                fileSelectModal.classList.remove('active');
+            });
+
+            document.getElementById('cancelFileSelect').addEventListener('click', function() {
+                fileSelectModal.classList.remove('active');
+            });
+
+            // 文件项选择
+            document.querySelectorAll('.file-item.selectable').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (e.target.type !== 'checkbox') {
+                        const checkbox = this.querySelector('input[type="checkbox"]');
+                        checkbox.checked = !checkbox.checked;
+                    }
+                    this.classList.toggle('selected', this.querySelector('input[type="checkbox"]').checked);
+                    updateSelectedCount();
+                });
+            });
+
+            function updateSelectedCount() {
+                const count = document.querySelectorAll('.file-item.selectable input:checked').length;
+                document.getElementById('selectedCount').textContent = count;
+            }
+
+            // 确认文件选择
+            document.getElementById('confirmFileSelect').addEventListener('click', function() {
+                const selectedFiles = document.querySelectorAll('.file-item.selectable input:checked');
+                const selectedContainer = document.getElementById('selectedReads');
+                
+                if (selectedFiles.length > 0) {
+                    let html = '';
+                    selectedFiles.forEach(file => {
+                        const item = file.closest('.file-item');
+                        html += `
+                            <div class="selected-file-item">
+                                <i class="fas fa-file-code"></i>
+                                <span class="file-name">${item.dataset.file}</span>
+                                <span class="file-size">${item.dataset.size}</span>
+                                <button class="remove-file"><i class="fas fa-times"></i></button>
+                            </div>
+                        `;
+                    });
+                    selectedContainer.innerHTML = html;
+                    
+                    // 添加删除功能
+                    selectedContainer.querySelectorAll('.remove-file').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            this.closest('.selected-file-item').remove();
+                            if (selectedContainer.querySelectorAll('.selected-file-item').length === 0) {
+                                selectedContainer.innerHTML = `
+                                    <div class="empty-state-mini">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>点击添加或拖拽文件到此处</span>
+                                    </div>
+                                `;
+                            }
+                        });
+                    });
+                }
+                
+                fileSelectModal.classList.remove('active');
+            });
+
+            // 运行确认模态框
+            const runToolBtn = document.getElementById('runToolBtn');
+            const runConfirmModal = document.getElementById('runConfirmModal');
+            const successToast = document.getElementById('successToast');
+
+            runToolBtn.addEventListener('click', function() {
+                document.getElementById('summaryTool').textContent = config.name;
+                document.getElementById('summaryFiles').textContent = '2 个文件';
+                runConfirmModal.classList.add('active');
+            });
+
+            document.getElementById('closeRunModal').addEventListener('click', function() {
+                runConfirmModal.classList.remove('active');
+            });
+
+            document.getElementById('cancelRun').addEventListener('click', function() {
+                runConfirmModal.classList.remove('active');
+            });
+
+            document.getElementById('confirmRun').addEventListener('click', function() {
+                runConfirmModal.classList.remove('active');
+                
+                // 显示成功提示
+                successToast.classList.add('show');
+                setTimeout(() => {
+                    successToast.classList.remove('show');
+                }, 3000);
+            });
+
+            // 重置参数
+            document.getElementById('resetParamsBtn').addEventListener('click', function() {
+                document.getElementById('threads').value = 4;
+                document.getElementById('qualityThreshold').value = 20;
+                document.getElementById('adaptersRemoved').checked = true;
+                document.getElementById('pairedEnd').checked = false;
+            });
+        });
+    </script>
+</body>
+</html>

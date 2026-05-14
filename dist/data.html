@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioCore - 数据管理</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边导航栏 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" stroke="url(#grad1)" stroke-width="3"/>
+                        <path d="M12 20 Q16 14, 20 20 T28 20" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <circle cx="14" cy="18" r="2" fill="#00D4AA"/>
+                        <circle cx="26" cy="18" r="2" fill="#00D4AA"/>
+                        <path d="M15 25 Q20 28, 25 25" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">BioCore</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="projects.html" class="nav-item">
+                    <i class="fas fa-folder-open"></i>
+                    <span>项目</span>
+                </a>
+                <a href="data.html" class="nav-item active">
+                    <i class="fas fa-database"></i>
+                    <span>数据管理</span>
+                </a>
+                
+                <a href="workflow-designer.html" class="nav-item">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>工作流</span>
+                </a>
+                <a href="visualize.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>可视化</span>
+                </a>
+                <a href="tools.html" class="nav-item">
+                    <i class="fas fa-wrench"></i>
+                    <span>工具</span>
+                </a>
+                <a href="results.html" class="nav-item">
+                    <i class="fas fa-file-medical"></i>
+                    <span>结果查看</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>报告中心</span>
+                </a>
+                <a href="team.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>团队管理</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </a>
+                <div class="user-profile">
+                    <div class="avatar">李</div>
+                    <div class="user-info">
+                        <span class="user-name">李博士</span>
+                        <span class="user-role">研究人员</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部栏 -->
+            <header class="topbar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="搜索文件名、类型或描述...">
+                </div>
+                <div class="topbar-actions">
+                    <button class="action-btn" title="通知">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+                    <button class="action-btn" title="帮助">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 内容区域 -->
+            <div class="content">
+                <!-- 页面标题区 -->
+                <div class="page-header">
+                    <div class="page-title-section">
+                        <h1 class="page-title">
+                            <i class="fas fa-database"></i>
+                            数据管理
+                        </h1>
+                        <p class="page-subtitle">共 <span id="dataCount">0</span> 个文件，存储空间 <span id="storageUsed">0 GB</span></p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" id="refreshDataBtn">
+                            <i class="fas fa-sync-alt"></i>
+                            刷新
+                        </button>
+                        <button class="btn btn-primary" id="uploadDataBtn">
+                            <i class="fas fa-upload"></i>
+                            上传数据
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 存储空间概览 -->
+                <div class="storage-overview">
+                    <div class="storage-card">
+                        <div class="storage-icon">
+                            <i class="fas fa-hdd"></i>
+                        </div>
+                        <div class="storage-info">
+                            <div class="storage-label">存储空间</div>
+                            <div class="storage-value"><span id="usedSpace">0</span> / <span id="totalSpace">500</span> GB</div>
+                            <div class="storage-bar">
+                                <div class="storage-fill" id="storageFill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="storage-percent" id="storagePercent">0%</div>
+                    </div>
+                    <div class="storage-stats">
+                        <div class="storage-stat">
+                            <i class="fas fa-file-code"></i>
+                            <span class="stat-num" id="fastqCount">0</span>
+                            <span class="stat-label">FASTQ</span>
+                        </div>
+                        <div class="storage-stat">
+                            <i class="fas fa-file-medical"></i>
+                            <span class="stat-num" id="bamCount">0</span>
+                            <span class="stat-label">BAM</span>
+                        </div>
+                        <div class="storage-stat">
+                            <i class="fas fa-file-alt"></i>
+                            <span class="stat-num" id="vcfCount">0</span>
+                            <span class="stat-label">VCF</span>
+                        </div>
+                        <div class="storage-stat">
+                            <i class="fas fa-dna"></i>
+                            <span class="stat-num" id="fastaCount">0</span>
+                            <span class="stat-label">FASTA</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 筛选工具栏 -->
+                <div class="filter-toolbar">
+                    <div class="filter-left">
+                        <div class="filter-group">
+                            <label>文件类型</label>
+                            <select id="typeFilter">
+                                <option value="all">全部类型</option>
+                                <option value="fastq">FASTQ</option>
+                                <option value="bam">BAM</option>
+                                <option value="vcf">VCF</option>
+                                <option value="fasta">FASTA</option>
+                                <option value="bed">BED</option>
+                                <option value="gtf">GTF/GFF</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>关联项目</label>
+                            <select id="projectFilter">
+                                <option value="all">全部项目</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>排序</label>
+                            <select id="sortFilter">
+                                <option value="date">最近上传</option>
+                                <option value="name">名称</option>
+                                <option value="size">文件大小</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-right">
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="grid" title="网格视图">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button class="view-btn" data-view="list" title="列表视图">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 数据文件列表 -->
+                <div class="data-grid" id="dataGrid">
+                    <!-- 数据文件会通过JavaScript动态生成 -->
+                </div>
+
+                <!-- 空状态 -->
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>暂无数据</h3>
+                    <p>点击上方"上传数据"按钮开始上传您的生物信息数据文件</p>
+                    <button class="btn btn-primary" id="emptyUploadBtn">
+                        <i class="fas fa-upload"></i>
+                        上传数据
+                    </button>
+                </div>
+
+                <!-- 分页导航 -->
+                <div class="pagination" id="pagination">
+                    <div class="pagination-info">
+                        显示 <span id="startNum">1</span>-<span id="endNum">12</span> 共 <span id="totalNum">0</span> 个
+                    </div>
+                    <div class="pagination-controls" id="paginationControls">
+                        <button class="page-btn" id="prevPage" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn" id="nextPage">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 上传数据模态框 -->
+    <div class="modal-overlay" id="uploadModal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h2><i class="fas fa-upload"></i> 上传数据</h2>
+                <button class="modal-close" id="closeUploadModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- 上传方式选择 -->
+                <div class="upload-methods">
+                    <div class="upload-method active" data-method="local">
+                        <i class="fas fa-laptop"></i>
+                        <span>本地上传</span>
+                    </div>
+                    <div class="upload-method" data-method="url">
+                        <i class="fas fa-link"></i>
+                        <span>URL导入</span>
+                    </div>
+                    <div class="upload-method" data-method="sra">
+                        <i class="fas fa-database"></i>
+                        <span>SRA/ENA</span>
+                    </div>
+                </div>
+
+                <!-- 本地上传区域 -->
+                <div class="upload-content" id="localUpload">
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>拖拽文件到此处或<span class="browse-link">浏览文件</span></p>
+                        <span class="upload-hint">支持 FASTQ, BAM, VCF, FASTA, BED, GTF 等格式</span>
+                        <input type="file" id="fileInput" multiple hidden accept=".fastq,.fq,.fastq.gz,.fq.gz,.bam,.vcf,.vcf.gz,.fasta,.fa,.bed,.gtf,.gff">
+                    </div>
+
+                    <!-- 上传队列 -->
+                    <div class="upload-queue" id="uploadQueue">
+                        <div class="queue-header">
+                            <span>上传队列 (<span id="queueCount">0</span>)</span>
+                            <button class="btn-clear" id="clearQueue">清空</button>
+                        </div>
+                        <div class="queue-list" id="queueList">
+                            <!-- 上传项会动态添加 -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- URL导入区域 -->
+                <div class="upload-content" id="urlUpload" style="display: none;">
+                    <div class="url-input-group">
+                        <input type="text" id="dataUrl" placeholder="输入数据文件URL地址">
+                        <select id="urlType">
+                            <option value="auto">自动识别</option>
+                            <option value="fastq">FASTQ</option>
+                            <option value="bam">BAM</option>
+                            <option value="vcf">VCF</option>
+                            <option value="fasta">FASTA</option>
+                        </select>
+                    </div>
+                    <div class="url-presets">
+                        <span class="preset-label">快速导入:</span>
+                        <button class="preset-btn" data-url="https://example.com/sample_1.fastq.gz">示例数据1</button>
+                        <button class="preset-btn" data-url="https://example.com/sample_2.fastq.gz">示例数据2</button>
+                    </div>
+                </div>
+
+                <!-- SRA导入区域 -->
+                <div class="upload-content" id="sraUpload" style="display: none;">
+                    <div class="form-group">
+                        <label>SRR/ERR accession</label>
+                        <input type="text" id="sraAccession" placeholder="输入 SRR/ERR accession (如 SRR1234567)">
+                    </div>
+                    <div class="form-group">
+                        <label>数据格式</label>
+                        <select id="sraFormat">
+                            <option value="fastq">FASTQ</option>
+                            <option value="sra">SRA</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 上传设置 -->
+                <div class="upload-settings">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>关联项目</label>
+                            <select id="uploadProject">
+<option value="">-- 选择项目 --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>数据类型</label>
+                            <select id="uploadType">
+                                <option value="fastq">FASTQ</option>
+                                <option value="bam">BAM</option>
+                                <option value="vcf">VCF</option>
+                                <option value="fasta">FASTA</option>
+                                <option value="bed">BED</option>
+                                <option value="gtf">GTF/GFF</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>描述 (可选)</label>
+                        <textarea id="uploadDesc" rows="2" placeholder="添加文件描述或备注"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelUpload">取消</button>
+                <button class="btn btn-primary" id="startUpload" disabled>
+                    <i class="fas fa-upload"></i> 开始上传
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 数据详情模态框 -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h2 id="detailTitle"><i class="fas fa-file-code"></i> 文件详情</h2>
+                <button class="modal-close" onclick="closeDetailModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-content">
+                    <div class="detail-sidebar">
+                        <div class="detail-info-card">
+                            <div class="info-item">
+                                <span class="info-label">文件名</span>
+                                <span class="info-value" id="detailFileName">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">文件大小</span>
+                                <span class="info-value" id="detailSize">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">文件类型</span>
+                                <span class="info-value" id="detailType">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">上传时间</span>
+                                <span class="info-value" id="detailUploadTime">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">关联项目</span>
+                                <span class="info-value" id="detailProject">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">MD5校验</span>
+                                <span class="info-value mono" id="detailMd5">-</span>
+                            </div>
+                        </div>
+                        <div class="detail-actions">
+                            <button class="btn btn-secondary" id="downloadFile">
+                                <i class="fas fa-download"></i> 下载
+                            </button>
+                            <button class="btn btn-secondary" id="copyLink">
+                                <i class="fas fa-copy"></i> 复制链接
+                            </button>
+                            <button class="btn btn-danger" id="deleteFile">
+                                <i class="fas fa-trash"></i> 删除
+                            </button>
+                        </div>
+                    </div>
+                    <div class="detail-preview">
+                        <div class="preview-header">
+                            <span>文件预览</span>
+                            <div class="preview-controls">
+                                <select id="previewLines">
+                                    <option value="10">10行</option>
+                                    <option value="50">50行</option>
+                                    <option value="100">100行</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="preview-content" id="previewContent">
+                            <pre id="previewText">加载中...</pre>
+                        </div>
+                        <div class="preview-footer">
+                            <span id="previewInfo">显示 1-10 行</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 删除确认模态框 -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal modal-small">
+            <div class="modal-header">
+                <h2><i class="fas fa-exclamation-triangle"></i> 确认删除</h2>
+                <button class="modal-close" onclick="closeDeleteModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>确定要删除文件 "<span id="deleteFileName"></span>" 吗？</p>
+                <p class="warning-text">此操作不可恢复。</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">取消</button>
+                <button class="btn btn-danger" id="confirmDelete">
+                    <i class="fas fa-trash"></i> 删除
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

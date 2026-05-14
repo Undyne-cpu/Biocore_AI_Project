@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统设置 - BioCore</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --topbar-height: 64px;
+            --primary-color: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --bg-color: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --card-bg: #ffffff;
+            --hover-bg: #f1f5f9;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            overflow-y: auto;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            padding: 0 12px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .sidebar-footer {
+            padding: 16px;
+border-top: 1px solid var(--border-color);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            background: var(--hover-bg);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .user-action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .user-action-btn:hover {
+            background: var(--card-bg);
+            color: var(--primary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+        }
+
+        /* Topbar */
+        .topbar {
+            position: sticky;
+            top: 0;
+            height: var(--topbar-height);
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 50;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-color);
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb-current {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--hover-bg);
+            border-radius: 8px;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--primary-color);
+            background: var(--card-bg);
+        }
+
+        .search-box i {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 14px;
+            width: 200px;
+        }
+
+        .topbar-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .topbar-btn:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .topbar-btn .badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger-color);
+            border-radius: 50%;
+        }
+
+        /* Page Content */
+        .page-content {
+            padding: 32px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        /* Settings Grid */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 32px;
+        }
+
+        .settings-nav {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 8px;
+            height: fit-content;
+            position: sticky;
+            top: calc(var(--topbar-height) + 32px);
+        }
+
+        .settings-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+        }
+
+        .settings-nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .settings-nav-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .settings-nav-item i {
+            width: 20px;
+        }
+
+        .settings-content {
+            flex: 1;
+        }
+
+        .settings-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .section-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .settings-form {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-input:disabled {
+            background: var(--hover-bg);
+            cursor: not-allowed;
+        }
+
+        textarea.form-input {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Toggle Switch */
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: var(--hover-bg);
+            border-radius: 8px;
+        }
+
+        .toggle-info {
+            flex: 1;
+        }
+
+        .toggle-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .toggle-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--border-color);
+            border-radius: 26px;
+            transition: 0.3s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background: var(--primary-color);
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(22px);
+        }
+
+        /* Select */
+        .form-select {
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--card-bg);
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Danger Zone */
+        .danger-zone {
+            border: 1px solid var(--danger-color);
+            background: #fef2f2;
+        }
+
+        .danger-zone .section-title {
+            color: var(--danger-color);
+        }
+
+        /* API Keys Table */
+        .api-keys-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .api-keys-table th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            background: var(--hover-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .api-keys-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        .api-key-name {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .api-key-value {
+            font-family: monospace;
+            color: var(--text-secondary);
+        }
+
+        .api-key-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .api-key-status.active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .api-key-status.inactive {
+            background: var(--hover-bg);
+            color: var(--text-secondary);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .table-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .table-btn:hover {
+            background: var(--hover-bg);
+            color: var(--primary-color);
+        }
+
+        .table-btn.danger:hover {
+            background: #fee2e2;
+            color: var(--danger-color);
+        }
+
+        /* Activity Log */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--hover-bg);
+            color: var(--text-secondary);
+        }
+
+        .activity-icon.security {
+            background: #dbeafe;
+            color: var(--primary-color);
+        }
+
+        .activity-icon.warning {
+            background: #fef3c7;
+            color: var(--warning-color);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .activity-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            padding: 16px 24px;
+            background: var(--text-primary);
+            color: white;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: var(--success-color);
+        }
+
+        .toast.error {
+            background: var(--danger-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .settings-nav {
+                position: static;
+                display: flex;
+                gap: 8px;
+                overflow-x: auto;
+                padding: 8px;
+            }
+
+            .settings-nav-item {
+                white-space: nowrap;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .page-content {
+                padding: 24px 16px;
+            }
+
+            .topbar {
+                padding: 0 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-dna"></i>
+                </div>
+                <span class="logo-text">BioCore</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">主菜单</div>
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="projects.html" class="nav-item">
+                    <i class="fas fa-folder"></i>
+                    <span>我的项目</span>
+                </a>
+                <a href="tools.html" class="nav-item">
+                    <i class="fas fa-wrench"></i>
+                    <span>分析工具</span>
+                </a>
+                <a href="visualize.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数据可视化</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>报告中心</span>
+                </a>
+                <a href="team.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>团队管理</span>
+                </a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">系统</div>
+                <a href="settings.html" class="nav-item active">
+                    <i class="fas fa-cog"></i>
+                    <span>系统设置</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-question-circle"></i>
+                    <span>帮助中心</span>
+                </a>
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="user-avatar">李</div>
+                <div class="user-info">
+                    <div class="user-name">李明</div>
+                    <div class="user-role">管理员</div>
+                </div>
+                <div class="user-actions">
+                    <button class="user-action-btn" title="设置">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button class="user-action-btn" title="退出">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <nav class="breadcrumb">
+                    <a href="index.html">首页</a>
+                    <span class="breadcrumb-separator"><i class="fas fa-chevron-right"></i></span>
+                    <span class="breadcrumb-current">系统设置</span>
+                </nav>
+            </div>
+            <div class="topbar-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="搜索...">
+                </div>
+                <button class="topbar-btn" title="通知">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge"></span>
+                </button>
+                <button class="topbar-btn" title="帮助">
+                    <i class="fas fa-question-circle"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <div class="page-header">
+                <h1 class="page-title">系统设置</h1>
+                <p class="page-subtitle">管理您的账户偏好设置和安全选项</p>
+            </div>
+
+            <div class="settings-grid">
+                <!-- Settings Navigation -->
+                <nav class="settings-nav">
+                    <button class="settings-nav-item active" data-section="profile">
+                        <i class="fas fa-user"></i>
+                        <span>个人资料</span>
+                    </button>
+                    <button class="settings-nav-item" data-section="security">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>安全设置</span>
+                    </button>
+                    <button class="settings-nav-item" data-section="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span>通知设置</span>
+                    </button>
+                    <button class="settings-nav-item" data-section="api">
+                        <i class="fas fa-key"></i>
+                        <span>API 密钥</span>
+                    </button>
+                    <button class="settings-nav-item" data-section="appearance">
+                        <i class="fas fa-palette"></i>
+                        <span>外观</span>
+                    </button>
+                    <button class="settings-nav-item" data-section="advanced">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>高级设置</span>
+                    </button>
+                </nav>
+
+                <!-- Settings Content -->
+                <div class="settings-content">
+                    <!-- Profile Section -->
+                    <section class="settings-section" id="section-profile">
+                        <h2 class="section-title">个人资料</h2>
+                        <p class="section-desc">管理您的个人信息和个人资料设置</p>
+                        
+                        <div class="settings-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">姓名</label>
+                                    <input type="text" class="form-input" value="李明">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">用户名</label>
+                                    <input type="text" class="form-input" value="liming" disabled>
+                                    <span class="form-hint">用户名无法修改</span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">邮箱</label>
+                                    <input type="email" class="form-input" value="liming@biocore.cn">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">电话号码</label>
+                                    <input type="tel" class="form-input" value="+86 138 0000 1234">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">组织机构</label>
+                                    <input type="text" class="form-input" value="北京大学">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">部门</label>
+                                    <select class="form-select">
+                                        <option selected>生物信息学系</option>
+                                        <option>遗传学系</option>
+                                        <option>细胞生物学系</option>
+                                        <option>其他</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group full-width">
+                                <label class="form-label">个人简介</label>
+                                <textarea class="form-input" placeholder="描述您的研究背景和专长...">生物信息学研究员，专注于基因组学数据分析，在NGS测序数据分析、变异检测方面有丰富经验。</textarea>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-secondary">取消</button>
+                                <button class="btn btn-primary" onclick="showToast('个人资料已更新')">
+                                    <i class="fas fa-save"></i>
+                                    保存更改
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Security Section -->
+                    <section class="settings-section" id="section-security" style="display: none;">
+                        <h2 class="section-title">安全设置</h2>
+                        <p class="section-desc">管理您的账户安全，包括密码和双因素认证</p>
+                        
+                        <div class="settings-form">
+                            <div class="toggle-group">
+                                <div class="toggle-info">
+                                    <div class="toggle-label">双因素认证</div>
+                                    <div class="toggle-desc">启用双重验证以增强账户安全性</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-group">
+                                <div class="toggle-info">
+                                    <div class="toggle-label">登录通知</div>
+                                    <div class="toggle-desc">在新设备登录时发送邮件通知</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">当前密码</label>
+                                <input type="password" class="form-input" placeholder="输入当前密码">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">新密码</label>
+                                    <input type="password" class="form-input" placeholder="输入新密码">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">确认新密码</label>
+                                    <input type="password" class="form-input" placeholder="再次输入新密码">
+                                </div>
+                            </div>
+
+                            <div class="btn-group">
+                                <button class="btn btn-secondary">取消</button>
+                                <button class="btn btn-primary" onclick="showToast('密码已更新')">
+                                    <i class="fas fa-key"></i>
+                                    更新密码
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Activity Log -->
+                        <div style="margin-top: 32px;">
+                            <h3 class="section-title" style="font-size: 16px; margin-bottom: 16px;">最近活动</h3>
+                            <div class="activity-list">
+                                <div class="activity-item">
+                                    <div class="activity-icon security">
+                                        <i class="fas fa-sign-in-alt"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">登录成功</div>
+                                        <div class="activity-desc">从 192.168.1.100 (北京) 登录</div>
+                                        <div class="activity-time">今天 14:32</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon security">
+                                        <i class="fas fa-key"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">密码已更新</div>
+                                        <div class="activity-desc">通过账户设置页面修改</div>
+                                        <div class="activity-time">昨天 10:15</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon warning">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">登录失败尝试</div>
+                                        <div class="activity-desc">来自 203.0.113.50 (未知位置)</div>
+                                        <div class="activity-time">3天前</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Notifications Section -->
+                    <section class="settings-section" id="section-notifications" style="display: none;">
+                        <h2 class="section-title">通知设置</h2>
+                        <p class="section-desc">配置您希望接收的通知类型和频率</p>
+                        
+                        <div class="settings-form">
+                            <div class="toggle-group">
+                                <div class="toggle-info">
+                                    <div class="toggle-label">任务完成通知</div>
+                                    <div class="toggle-desc">当分析任务完成时发送通知</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-group">
+                                <div class="toggle-info">
+                                    <div class="toggle-label">项目更新通知</div>
+                                    <div class="toggle-desc">当团队成员更新项目时通知</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-group">
+                                <div class="toggle-info">
+                                    <div class="toggle-label">系统公告</div>
+                                    <div class="toggle-desc">接收平台更新和维护通知</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-group">
+                                <div class="toggle-info">
+                                    <div class="toggle-label">周报摘要</div>
+                                    <div class="toggle-desc">每周一发送项目活动摘要</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">通知方式</label>
+                                <div style="display: flex; gap: 24px; margin-top: 8px;">
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                        <input type="checkbox" checked style="width: 18px; height: 18px;">
+                                        <span>邮件通知</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                        <input type="checkbox" checked style="width: 18px; height: 18px;">
+                                        <span>应用内通知</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                        <input type="checkbox" style="width: 18px; height: 18px;">
+                                        <span>SMS 短信</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="btn-group">
+                                <button class="btn btn-secondary">重置</button>
+                                <button class="btn btn-primary" onclick="showToast('通知设置已保存')">
+                                    <i class="fas fa-save"></i>
+                                    保存设置
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- API Section -->
+                    <section class="settings-section" id="section-api" style="display: none;">
+                        <h2 class="section-title">API 密钥</h2>
+                        <p class="section-desc">管理您的 API 密钥以连接外部应用程序</p>
+                        
+                        <table class="api-keys-table">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>密钥</th>
+                                    <th>状态</th>
+                                    <th>创建时间</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="api-key-name">生产环境密钥</td>
+                                    <td class="api-key-value">••••••••a3f8c9d2e1b4</td>
+                                    <td><span class="api-key-status active"><i class="fas fa-check-circle"></i> 活跃</span></td>
+                                    <td>2024-01-15</td>
+                                    <td>
+                                        <div class="table-actions">
+                                            <button class="table-btn" title="复制">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                            <button class="table-btn danger" title="删除">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="api-key-name">测试环境密钥</td>
+                                    <td class="api-key-value">••••••••7h9i0j1k2l3</td>
+                                    <td><span class="api-key-status active"><i class="fas fa-check-circle"></i> 活跃</span></td>
+                                    <td>2024-02-20</td>
+                                    <td>
+                                        <div class="table-actions">
+                                            <button class="table-btn" title="复制">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                            <button class="table-btn danger" title="删除">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="api-key-name">旧版密钥</td>
+                                    <td class="api-key-value">••••••••5m6n7o8p9q0</td>
+                                    <td><span class="api-key-status inactive"><i class="fas fa-times-circle"></i> 已停用</span></td>
+                                    <td>2023-08-10</td>
+                                    <td>
+<div class="table-actions">
+                                            <button class="table-btn danger" title="删除">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="btn-group">
+                            <button class="btn btn-primary" onclick="showToast('API 密钥已创建')">
+                                <i class="fas fa-plus"></i>
+                                创建新密钥
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- Appearance Section -->
+                    <section class="settings-section" id="section-appearance" style="display: none;">
+                        <h2 class="section-title">外观设置</h2>
+                        <p class="section-desc">自定义平台的外观和显示偏好</p>
+                        
+                        <div class="settings-form">
+                            <div class="form-group">
+                                <label class="form-label">主题</label>
+                                <div style="display: flex; gap: 16px; margin-top: 8px;">
+                                    <label style="display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer;">
+                                        <div style="width: 80px; height: 60px; background: #ffffff; border: 2px solid #2563eb; border-radius: 8px;"></div>
+                                        <span style="font-size: 13px;">浅色</span>
+                                    </label>
+                                    <label style="display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer;">
+                                        <div style="width: 80px; height: 60px; background: #1e293b; border: 2px solid transparent; border-radius: 8px;"></div>
+                                        <span style="font-size: 13px;">深色</span>
+                                    </label>
+                                    <label style="display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer;">
+                                        <div style="width: 80px; height: 60px; background: linear-gradient(180deg, #ffffff 50%, #1e293b 50%); border: 2px solid transparent; border-radius: 8px;"></div>
+                                        <span style="font-size: 13px;">自动</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">侧边栏模式</label>
+                                <select class="form-select" style="width: 200px;">
+                                    <option>固定展开</option>
+                                    <option>固定收起</option>
+                                    <option>可折叠</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">紧凑模式</label>
+                                <div class="toggle-group">
+                                    <div class="toggle-info">
+                                        <div class="toggle-desc">减少元素间距，使用更紧凑的布局</div>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">语言</label>
+                                <select class="form-select" style="width: 200px;">
+                                    <option selected>简体中文</option>
+                                    <option>English</option>
+                                    <option>日本語</option>
+                                </select>
+                            </div>
+
+                            <div class="btn-group">
+                                <button class="btn btn-secondary">重置</button>
+                                <button class="btn btn-primary" onclick="showToast('外观设置已保存')">
+                                    <i class="fas fa-save"></i>
+                                    保存设置
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Advanced Section -->
+                    <section class="settings-section" id="section-advanced" style="display: none;">
+                        <h2 class="section-title">高级设置</h2>
+                        <p class="section-desc">配置高级系统选项和偏好</p>
+                        
+                        <div class="settings-form">
+                            <div class="toggle-group">
+                                <div class="toggle-info">
+                                    <div class="toggle-label">数据导出</div>
+                                    <div class="toggle-desc">允许导出原始数据和中间结果</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-group">
+                                <div class="toggle-info">
+                                    <div class="toggle-label">调试模式</div>
+                                    <div class="toggle-desc">启用详细日志记录用于故障排除</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">会话超时 (分钟)</label>
+                                <input type="number" class="form-input" value="30" style="width: 150px;">
+                                <span class="form-hint">设置无活动后自动退出登录的时间</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">数据保留期 (天)</label>
+                                <input type="number" class="form-input" value="365" style="width: 150px;">
+                                <span class="form-hint">自动清理超过此期限的临时文件</span>
+                            </div>
+
+                            <div class="btn-group">
+                                <button class="btn btn-secondary">重置为默认</button>
+                                <button class="btn btn-primary" onclick="showToast('高级设置已保存')">
+                                    <i class="fas fa-save"></i>
+                                    保存设置
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Danger Zone -->
+                    <section class="settings-section danger-zone" id="section-danger" style="display: none;">
+                        <h2 class="section-title">危险区域</h2>
+                        <p class="section-desc">以下操作不可逆，请谨慎操作</p>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-weight: 500; margin-bottom: 4px;">导出所有数据</div>
+                                    <div style="font-size: 13px; color: var(--text-secondary);">下载您的所有项目、数据和设置的副本</div>
+                                </div>
+                                <button class="btn btn-secondary" onclick="showToast('数据导出已开始')">
+                                    <i class="fas fa-download"></i>
+                                    导出
+                                </button>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-weight: 500; margin-bottom: 4px;">停用账户</div>
+                                    <div style="font-size: 13px; color: var(--text-secondary);">暂时停用您的账户，您可以在以后重新激活</div>
+                                </div>
+                                <button class="btn btn-secondary" onclick="showToast('账户已停用')">
+                                    <i class="fas fa-ban"></i>
+                                    停用
+                                </button>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-weight: 500; margin-bottom: 4px;">删除账户</div>
+                                    <div style="font-size: 13px; color: var(--text-secondary);">永久删除您的账户和所有相关数据，此操作无法撤销</div>
+                                </div>
+                                <button class="btn btn-danger" onclick="showToast('请联系管理员删除账户')">
+                                    <i class="fas fa-trash"></i>
+                                    删除
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">保存成功</span>
+    </div>
+
+    <script>
+        // Settings navigation
+        document.querySelectorAll('.settings-nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Update active state
+                document.querySelectorAll('.settings-nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+
+                // Show corresponding section
+                const section = this.dataset.section;
+                document.querySelectorAll('.settings-section').forEach(s => s.style.display = 'none');
+                
+                // Show main sections
+                const mainSections = ['profile', 'security', 'notifications', 'api', 'appearance', 'advanced'];
+                if (mainSections.includes(section)) {
+                    document.getElementById('section-' + section).style.display = 'block';
+                }
+            });
+        });
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastMessage.textContent = message;
+            toast.className = 'toast ' + type + ' show';
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize first section as active
+        document.getElementById('section-profile').style.display = 'block';
+    </script>
+</body>
+</html>

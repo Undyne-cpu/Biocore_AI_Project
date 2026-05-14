@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioCore - 工作流设计器</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边导航栏 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" stroke="url(#grad1)" stroke-width="3"/>
+                        <path d="M12 20 Q16 14, 20 20 T28 20" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <circle cx="14" cy="18" r="2" fill="#00D4AA"/>
+                        <circle cx="26" cy="18" r="2" fill="#00D4AA"/>
+                        <path d="M15 25 Q20 28, 25 25" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">BioCore</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="projects.html" class="nav-item">
+                    <i class="fas fa-folder-open"></i>
+                    <span>项目</span>
+                </a>
+                <a href="data.html" class="nav-item">
+                    <i class="fas fa-database"></i>
+                    <span>数据管理</span>
+                </a>
+                
+                <a href="workflow-designer.html" class="nav-item active">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>工作流</span>
+                </a>
+                <a href="visualize.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>可视化</span>
+                </a>
+                <a href="tools.html" class="nav-item">
+                    <i class="fas fa-wrench"></i>
+                    <span>工具</span>
+                </a>
+                <a href="results.html" class="nav-item">
+                    <i class="fas fa-file-medical"></i>
+                    <span>结果查看</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>报告中心</span>
+                </a>
+                <a href="team.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>团队管理</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </a>
+                <div class="user-profile">
+                    <div class="avatar">李</div>
+                    <div class="user-info">
+                        <span class="user-name">李博士</span>
+                        <span class="user-role">研究人员</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content workflow-main">
+            <!-- 顶部工具栏 -->
+            <header class="workflow-toolbar" style="position: relative; z-index: 100;">
+                <div class="toolbar-left">
+                    <div class="breadcrumb">
+                        <a href="projects.html">项目</a>
+                        <i class="fas fa-chevron-right"></i>
+                        <span>全基因组测序分析</span>
+                        <i class="fas fa-chevron-right"></i>
+                        <span class="current">工作流设计器</span>
+                    </div>
+                </div>
+                <!-- 右侧操作按钮 - 使用固定定位确保始终可见 -->
+                <div class="toolbar-right" style="position: absolute; right: 24px; top: 50%; transform: translateY(-50%); display: flex; gap: 12px; z-index: 101;">
+                    <button class="toolbar-btn" title="保存" style="background: var(--bg-hover); border: 1px solid var(--border); padding: 8px 16px; border-radius: 6px; color: var(--text-secondary); cursor: pointer;">
+                        <i class="fas fa-save"></i>
+                        <span>保存</span>
+                    </button>
+                    <button class="toolbar-btn" title="验证" style="background: var(--bg-hover); border: 1px solid var(--border); padding: 8px 16px; border-radius: 6px; color: var(--text-secondary); cursor: pointer;">
+                        <i class="fas fa-check-circle"></i>
+                        <span>验证</span>
+                    </button>
+                    <button class="toolbar-btn primary" id="runWorkflowBtn" title="运行" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; padding: 8px 16px; border-radius: 6px; color: #fff; cursor: pointer;">
+                        <i class="fas fa-play"></i>
+                        <span>运行</span>
+                    </button>
+                    <button class="toolbar-btn" id="viewExecutionBtn" title="查看执行" style="background: var(--bg-hover); border: 1px solid var(--border); padding: 8px 16px; border-radius: 6px; color: var(--text-secondary); cursor: pointer;">
+                        <i class="fas fa-tasks"></i>
+                        <span>执行监控</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 工作流设计器主体 -->
+            <div class="workflow-designer">
+                <!-- 左侧工具面板 -->
+                <div class="tools-panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-tools"></i> 工具库</h3>
+                    </div>
+                    <div class="tools-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="搜索工具...">
+                    </div>
+                    <div class="tools-categories">
+                        <div class="category-group">
+                            <div class="category-title">
+                                <i class="fas fa-font"></i> 序列处理
+                            </div>
+                            <div class="tool-item" draggable="true" data-tool="fastqc">
+                                <div class="tool-icon fastqc">
+                                    <i class="fas fa-chart-pie"></i>
+                                </div>
+                                <span>FastQC</span>
+                            </div>
+                            <div class="tool-item" draggable="true" data-tool="seqkit">
+                                <div class="tool-icon seqkit">
+                                    <i class="fas fa-tools"></i>
+                                </div>
+                                <span>SeqKit</span>
+                            </div>
+                        </div>
+                        <div class="category-group">
+                            <div class="category-title">
+                                <i class="fas fa-dna"></i> 变异分析
+                            </div>
+                            <div class="tool-item" draggable="true" data-tool="bwa">
+                                <div class="tool-icon bwa">
+                                    <i class="fas fa-exchange-alt"></i>
+                                </div>
+                                <span>BWA</span>
+                            </div>
+                            <div class="tool-item" draggable="true" data-tool="gatk">
+                                <div class="tool-icon gatk">
+                                    <i class="fas fa-dna"></i>
+                                </div>
+                                <span>GATK</span>
+                            </div>
+                            <div class="tool-item" draggable="true" data-tool="annovar">
+                                <div class="tool-icon annovar">
+                                    <i class="fas fa-tags"></i>
+                                </div>
+                                <span>ANNOVAR</span>
+                            </div>
+                        </div>
+                        <div class="category-group">
+                            <div class="category-title">
+                                <i class="fas fa-chart-line"></i> 表达分析
+                            </div>
+                            <div class="tool-item" draggable="true" data-tool="star">
+                                <div class="tool-icon star">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span>STAR</span>
+                            </div>
+                            <div class="tool-item" draggable="true" data-tool="featurecounts">
+                                <div class="tool-icon featurecounts">
+                                    <i class="fas fa-calculator"></i>
+                                </div>
+                                <span>featureCounts</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 中央画布 -->
+                <div class="workflow-canvas" id="workflowCanvas">
+                    <div class="canvas-toolbar">
+                        <button class="canvas-btn" title="放大">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                        <button class="canvas-btn" title="缩小">
+                            <i class="fas fa-search-minus"></i>
+                        </button>
+                        <button class="canvas-btn" title="适应屏幕">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </button>
+                        <div class="zoom-level">100%</div>
+                        <div class="canvas-divider"></div>
+                        <button class="canvas-btn" title="撤销">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                        <button class="canvas-btn" title="重做">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- 预设工作流节点 -->
+                    <div class="workflow-nodes" id="workflowNodes">
+                        <!-- 开始节点 -->
+                        <div class="workflow-node start-node" id="startNode" style="left: 50px; top: 200px;">
+                            <div class="node-icon">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="node-info">
+                                <span class="node-name">开始</span>
+                                <span class="node-type">输入节点</span>
+                            </div>
+                        </div>
+
+                        <!-- 节点1: FastQC -->
+                        <div class="workflow-node tool-node" id="node1" style="left: 250px; top: 100px;">
+                            <div class="node-header">
+                                <div class="node-icon fastqc">
+                                    <i class="fas fa-chart-pie"></i>
+                                </div>
+                                <span class="node-name">FastQC</span>
+                            </div>
+                            <div class="node-params">
+                                <span class="param-preview">质量控制</span>
+                            </div>
+                            <div class="node-status ready">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="node-actions">
+                                <button class="node-btn" title="配置"><i class="fas fa-cog"></i></button>
+                                <button class="node-btn" title="删除"><i class="fas fa-trash"></i></button>
+                            </div>
+                            <div class="node-ports">
+                                <div class="port port-in" data-port="input"></div>
+                                <div class="port port-out" data-port="output"></div>
+                            </div>
+                        </div>
+
+                        <!-- 连接线1 -->
+                        <svg class="workflow-connections">
+                            <defs>
+                                <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#667eea"/>
+                                    <stop offset="100%" style="stop-color:#00D4AA"/>
+                                </linearGradient>
+                            </defs>
+                            <path class="connection-line" d="M 100 200 Q 175 200, 250 150" />
+                            <path class="connection-line" d="M 380 150 Q 450 150, 520 200" />
+                            <path class="connection-line" d="M 430 250 Q 500 250, 570 300" />
+                        </svg>
+
+                        <!-- 节点2: BWA -->
+                        <div class="workflow-node tool-node" id="node2" style="left: 520px; top: 150px;">
+                            <div class="node-header">
+                                <div class="node-icon bwa">
+                                    <i class="fas fa-exchange-alt"></i>
+                                </div>
+                                <span class="node-name">BWA-MEM</span>
+                            </div>
+                            <div class="node-params">
+                                <span class="param-preview">序列比对</span>
+                            </div>
+                            <div class="node-status ready">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="node-actions">
+                                <button class="node-btn" title="配置"><i class="fas fa-cog"></i></button>
+                                <button class="node-btn" title="删除"><i class="fas fa-trash"></i></button>
+                            </div>
+                            <div class="node-ports">
+                                <div class="port port-in" data-port="input"></div>
+                                <div class="port port-out" data-port="output"></div>
+                            </div>
+                        </div>
+
+                        <!-- 节点3: GATK -->
+                        <div class="workflow-node tool-node" id="node3" style="left: 790px; top: 250px;">
+                            <div class="node-header">
+                                <div class="node-icon gatk">
+                                    <i class="fas fa-dna"></i>
+                                </div>
+                                <span class="node-name">GATK HaplotypeCaller</span>
+                            </div>
+                            <div class="node-params">
+                                <span class="param-preview">变异检测</span>
+                            </div>
+                            <div class="node-status ready">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="node-actions">
+                                <button class="node-btn" title="配置"><i class="fas fa-cog"></i></button>
+                                <button class="node-btn" title="删除"><i class="fas fa-trash"></i></button>
+                            </div>
+                            <div class="node-ports">
+                                <div class="port port-in" data-port="input"></div>
+                                <div class="port port-out" data-port="output"></div>
+                            </div>
+                        </div>
+
+                        <!-- 节点4: ANNOVAR -->
+                        <div class="workflow-node tool-node" id="node4" style="left: 1060px; top: 200px;">
+                            <div class="node-header">
+                                <div class="node-icon annovar">
+                                    <i class="fas fa-tags"></i>
+                                </div>
+                                <span class="node-name">ANNOVAR</span>
+                            </div>
+                            <div class="node-params">
+                                <span class="param-preview">变异注释</span>
+                            </div>
+                            <div class="node-status ready">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="node-actions">
+                                <button class="node-btn" title="配置"><i class="fas fa-cog"></i></button>
+                                <button class="node-btn" title="删除"><i class="fas fa-trash"></i></button>
+                            </div>
+                            <div class="node-ports">
+                                <div class="port port-in" data-port="input"></div>
+                                <div class="port port-out" data-port="output"></div>
+                            </div>
+                        </div>
+
+                        <!-- 结束节点 -->
+                        <div class="workflow-node end-node" id="endNode" style="left: 1300px; top: 200px;">
+                            <div class="node-icon">
+                                <i class="fas fa-flag-checkered"></i>
+                            </div>
+                            <div class="node-info">
+                                <span class="node-name">完成</span>
+                                <span class="node-type">输出节点</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧属性面板 -->
+                <div class="properties-panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-sliders-h"></i> 属性配置</h3>
+                    </div>
+                    
+                    <!-- 工作流属性 -->
+                    <div class="properties-section">
+                        <div class="section-title">基本信息</div>
+                        <div class="property-group">
+                            <label>工作流名称</label>
+                            <input type="text" value="WGS标准分析流程">
+                        </div>
+                        <div class="property-group">
+                            <label>描述</label>
+                            <textarea placeholder="输入工作流描述...">从原始测序数据到变异检测的完整WGS分析流程，包含质控、比对、变异检测和注释。</textarea>
+                        </div>
+                        <div class="property-group">
+                            <label>版本</label>
+                            <input type="text" value="v1.0.0" disabled>
+                        </div>
+                    </div>
+
+                    <!-- 模板选择 -->
+                    <div class="properties-section">
+                        <div class="section-title">快速模板</div>
+                        <div class="template-list">
+                            <div class="template-item">
+                                <div class="template-icon wgs">
+                                    <i class="fas fa-dna"></i>
+                                </div>
+                                <div class="template-info">
+                                    <span class="template-name">WGS标准流程</span>
+                                    <span class="template-desc">4个步骤</span>
+                                </div>
+                                <button class="template-apply">应用</button>
+                            </div>
+                            <div class="template-item">
+                                <div class="template-icon rna">
+                                    <i class="fas fa-rna"></i>
+                                </div>
+                                <div class="template-info">
+                                    <span class="template-name">RNA-seq流程</span>
+                                    <span class="template-desc">5个步骤</span>
+                                </div>
+                                <button class="template-apply">应用</button>
+                            </div>
+                            <div class="template-item">
+                                <div class="template-icon chip">
+                                    <i class="fas fa-project-diagram"></i>
+                                </div>
+                                <div class="template-info">
+                                    <span class="template-name">ChIP-seq流程</span>
+                                    <span class="template-desc">4个步骤</span>
+                                </div>
+                                <button class="template-apply">应用</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 执行设置 -->
+                    <div class="properties-section">
+                        <div class="section-title">执行设置</div>
+                        <div class="property-group">
+                            <label>并发任务数</label>
+                            <select>
+                                <option value="1">1 (串行)</option>
+                                <option value="2">2</option>
+                                <option value="4" selected>4</option>
+                                <option value="8">8</option>
+                            </select>
+                        </div>
+                        <div class="property-group">
+                            <label>失败策略</label>
+                            <select>
+                                <option value="stop">立即停止</option>
+                                <option value="skip" selected>跳过继续</option>
+                                <option value="retry">自动重试</option>
+                            </select>
+                        </div>
+                        <div class="property-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" checked>
+                                <span>自动保存检查点</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 节点配置模态框 -->
+    <div class="modal-overlay" id="nodeConfigModal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <h2><i class="fas fa-cog"></i> 配置节点</h2>
+                <button class="modal-close" id="closeNodeConfig">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="config-tabs">
+                    <button class="config-tab active" data-tab="params">参数配置</button>
+                    <button class="config-tab" data-tab="input">输入设置</button>
+                    <button class="config-tab" data-tab="output">输出设置</button>
+                </div>
+                <div class="config-content">
+                    <div class="config-panel" id="paramsPanel">
+                        <div class="param-group">
+                            <h3 class="param-group-title">基本参数</h3>
+                            <div class="param-grid">
+                                <div class="param-item">
+                                    <label>线程数</label>
+                                    <input type="number" value="4" min="1" max="32">
+                                </div>
+                                <div class="param-item">
+                                    <label>内存 (GB)</label>
+                                    <input type="number" value="8" min="1" max="64">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="param-group">
+                            <h3 class="param-group-title advanced-toggle">
+                                <i class="fas fa-chevron-down"></i>
+                                高级参数
+                            </h3>
+                            <div class="param-grid advanced-params" style="display: none;">
+                                <div class="param-item full-width">
+                                    <label>额外参数</label>
+                                    <input type="text" placeholder="输入额外参数...">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelNodeConfig">取消</button>
+                <button class="btn btn-primary" id="saveNodeConfig">
+                    <i class="fas fa-check"></i> 保存配置
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 运行确认模态框 -->
+    <div class="modal-overlay" id="runModal">
+        <div class="modal modal-small">
+            <div class="modal-header">
+                <h2><i class="fas fa-play"></i> 确认运行</h2>
+                <button class="modal-close" id="closeRunModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="run-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">工作流</span>
+                        <span class="summary-value" id="summaryWorkflow">WGS标准分析流程</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">步骤数</span>
+                        <span class="summary-value">4</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">预计时间</span>
+                        <span class="summary-value">约 1-2 小时</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelRun">取消</button>
+                <button class="btn btn-primary" id="confirmRun">
+                    <i class="fas fa-play"></i> 开始运行
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // 工作流设计器逻辑
+        document.addEventListener('DOMContentLoaded', function() {
+            // 节点配置模态框
+            const nodeConfigModal = document.getElementById('nodeConfigModal');
+            document.querySelectorAll('.node-btn').forEach(btn => {
+                if (btn.querySelector('.fa-cog')) {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        nodeConfigModal.classList.add('active');
+                    });
+                }
+            });
+
+            document.getElementById('closeNodeConfig').addEventListener('click', function() {
+                nodeConfigModal.classList.remove('active');
+            });
+
+            document.getElementById('cancelNodeConfig').addEventListener('click', function() {
+                nodeConfigModal.classList.remove('active');
+            });
+
+            document.getElementById('saveNodeConfig').addEventListener('click', function() {
+                nodeConfigModal.classList.remove('active');
+                // 保存配置逻辑
+            });
+
+            // 高级参数切换
+            const advancedToggle = document.querySelector('.advanced-toggle');
+            if (advancedToggle) {
+                advancedToggle.addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    const params = document.querySelector('.advanced-params');
+                    if (params.style.display === 'none') {
+                        params.style.display = 'grid';
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    } else {
+                        params.style.display = 'none';
+                        icon.classList.remove('fa-chevron-up');
+                        icon.classList.add('fa-chevron-down');
+                    }
+                });
+            }
+
+            // 配置标签切换
+            document.querySelectorAll('.config-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.config-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+                        // 运行确认
+            const runWorkflowBtn = document.getElementById('runWorkflowBtn');
+            const runModal = document.getElementById('runModal');
+
+            runWorkflowBtn.addEventListener('click', function() {
+                runModal.classList.add('active');
+            });
+
+            // 执行监控按钮
+            document.getElementById('viewExecutionBtn').addEventListener('click', function() {
+                window.location.href = 'workflow-execute.html';
+            });Modal = document.getElementById('runModal');
+
+            runWorkflowBtn.addEventListener('click', function() {
+                runModal.classList.add('active');
+            });
+
+            document.getElementById('closeRunModal').addEventListener('click', function() {
+                runModal.classList.remove('active');
+            });
+
+            document.getElementById('cancelRun').addEventListener('click', function() {
+                runModal.classList.remove('active');
+            });
+
+            document.getElementById('confirmRun').addEventListener('click', function() {
+                runModal.classList.remove('active');
+                // 跳转到执行页面
+                window.location.href = 'workflow-execute.html';
+            });
+
+            // 拖拽工具到画布
+            document.querySelectorAll('.tool-item').forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('tool', this.dataset.tool);
+                });
+            });
+
+            // 模板应用
+            document.querySelectorAll('.template-apply').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 应用模板逻辑
+                    console.log('应用模板');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

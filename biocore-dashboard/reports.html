@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioCore - 报告中心</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .reports-container {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .report-filters {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filter-card {
+            flex: 1;
+            min-width: 200px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .filter-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .filter-icon.projects { background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2)); color: var(--primary); }
+        .filter-icon.format { background: linear-gradient(135deg, rgba(0, 212, 170, 0.2), rgba(16, 185, 129, 0.2)); color: var(--accent); }
+        .filter-icon.date { background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(239, 68, 68, 0.2)); color: var(--warning); }
+
+        .filter-info {
+            flex: 1;
+        }
+
+        .filter-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .filter-value {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+
+        .report-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .report-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .report-preview {
+            height: 160px;
+            background: linear-gradient(135deg, var(--bg-hover), var(--bg-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .report-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23667890' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .report-type-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .report-type-badge.pdf { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .report-type-badge.xlsx { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .report-type-badge.docx { background: rgba(59, 130, 246, 0.2); color: var(--info); }
+
+        .report-preview-icon {
+            font-size: 3rem;
+            color: var(--text-muted);
+            z-index: 1;
+        }
+
+        .report-content {
+            padding: 20px;
+        }
+
+        .report-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .report-title i {
+            color: var(--primary);
+        }
+
+        .report-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .report-stats {
+            display: flex;
+            gap: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .report-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .report-stat i {
+            color: var(--text-muted);
+        }
+
+        .report-actions {
+            padding: 16px 20px;
+            background: var(--bg-hover);
+            display: flex;
+            gap: 12px;
+        }
+
+        .report-action-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .report-action-btn.primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .report-action-btn.primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .report-action-btn.secondary {
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .report-action-btn.secondary:hover {
+            background: var(--bg-active);
+            color: var(--text-primary);
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            color: var(--border);
+        }
+
+        .empty-state h3 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边导航栏 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" stroke="url(#grad1)" stroke-width="3"/>
+                        <path d="M12 20 Q16 14, 20 20 T28 20" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <circle cx="14" cy="18" r="2" fill="#00D4AA"/>
+                        <circle cx="26" cy="18" r="2" fill="#00D4AA"/>
+                        <path d="M15 25 Q20 28, 25 25" stroke="#00D4AA" stroke-width="2" fill="none"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">BioCore</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="projects.html" class="nav-item">
+                    <i class="fas fa-folder-open"></i>
+                    <span>项目</span>
+                </a>
+                <a href="data.html" class="nav-item">
+                    <i class="fas fa-database"></i>
+                    <span>数据管理</span>
+                </a>
+                <a href="workflow-designer.html" class="nav-item">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>工作流</span>
+                </a>
+                <a href="visualize.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>可视化</span>
+                </a>
+                <a href="tools.html" class="nav-item">
+                    <i class="fas fa-wrench"></i>
+                    <span>工具</span>
+                </a>
+                <a href="results.html" class="nav-item">
+                    <i class="fas fa-file-medical"></i>
+                    <span>结果查看</span>
+                </a>
+                <a href="reports.html" class="nav-item active">
+                    <i class="fas fa-file-alt"></i>
+                    <span>报告中心</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="#" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </a>
+                <div class="user-profile">
+                    <div class="avatar">李</div>
+                    <div class="user-info">
+                        <span class="user-name">李博士</span>
+                        <span class="user-role">研究人员</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部栏 -->
+            <header class="topbar">
+                <div class="breadcrumb">
+                    <a href="index.html">首页</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span class="current">报告中心</span>
+                </div>
+                <div class="topbar-actions">
+                    <button class="action-btn" title="新建报告">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="action-btn" title="刷新">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 内容区域 -->
+            <div class="content">
+                <!-- 页面标题 -->
+                <div class="page-header">
+                    <div class="page-title-section">
+                        <h1 class="page-title">
+                            <i class="fas fa-file-alt"></i>
+                            报告中心
+                        </h1>
+                        <p class="page-subtitle">查看、生成和管理所有分析报告</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            生成报告
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 报告筛选 -->
+                <div class="report-filters">
+                    <div class="filter-card">
+                        <div class="filter-icon projects">
+                            <i class="fas fa-folder"></i>
+                        </div>
+                        <div class="filter-info">
+                            <div class="filter-label">项目</div>
+                            <select class="filter-value" style="background: transparent; border: none; color: var(--text-primary); cursor: pointer;">
+                                <option>全部项目</option>
+                                <option>全基因组测序分析</option>
+                                <option>RNA-seq差异表达分析</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-card">
+                        <div class="filter-icon format">
+                            <i class="fas fa-file"></i>
+                        </div>
+                        <div class="filter-info">
+                            <div class="filter-label">格式</div>
+                            <select class="filter-value" style="background: transparent; border: none; color: var(--text-primary); cursor: pointer;">
+                                <option>全部格式</option>
+                                <option>PDF</option>
+                                <option>Excel</option>
+                                <option>Word</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-card">
+                        <div class="filter-icon date">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div class="filter-info">
+                            <div class="filter-label">时间范围</div>
+                            <select class="filter-value" style="background: transparent; border: none; color: var(--text-primary); cursor: pointer;">
+                                <option>最近30天</option>
+                                <option>最近90天</option>
+                                <option>全部时间</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 报告列表 -->
+                <div class="reports-grid">
+                    <div class="report-card">
+                        <div class="report-preview">
+                            <span class="report-type-badge pdf">PDF</span>
+                            <i class="fas fa-file-pdf report-preview-icon"></i>
+                        </div>
+                        <div class="report-content">
+                            <h3 class="report-title">
+                                <i class="fas fa-dna"></i>
+                                全基因组测序分析报告
+                            </h3>
+                            <p class="report-meta">
+                                <i class="fas fa-folder"></i> 全基因组测序分析
+                                <span style="margin-left: 12px;">2026-05-10</span>
+                            </p>
+                            <div class="report-stats">
+                                <span class="report-stat">
+                                    <i class="fas fa-file"></i>
+                                    12 页
+                                </span>
+                                <span class="report-stat">
+                                    <i class="fas fa-database"></i>
+                                    2.4 MB
+                                </span>
+                            </div>
+                        </div>
+                        <div class="report-actions">
+                            <button class="report-action-btn secondary">
+                                <i class="fas fa-eye"></i>
+                                预览
+                            </button>
+                            <button class="report-action-btn primary">
+                                <i class="fas fa-download"></i>
+                                下载
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="report-card">
+                        <div class="report-preview">
+                            <span class="report-type-badge xlsx">XLSX</span>
+                            <i class="fas fa-file-excel report-preview-icon"></i>
+                        </div>
+                        <div class="report-content">
+                            <h3 class="report-title">
+                                <i class="fas fa-chart-line"></i>
+                                差异表达分析统计表
+                            </h3>
+                            <p class="report-meta">
+                                <i class="fas fa-folder"></i> RNA-seq差异表达分析
+                                <span style="margin-left: 12px;">2026-05-08</span>
+                            </p>
+                            <div class="report-stats">
+                                <span class="report-stat">
+                                    <i class="fas fa-file"></i>
+                                    1 工作表
+                                </span>
+                                <span class="report-stat">
+                                    <i class="fas fa-database"></i>
+                                    856 KB
+                                </span>
+                            </div>
+                        </div>
+                        <div class="report-actions">
+                            <button class="report-action-btn secondary">
+                                <i class="fas fa-eye"></i>
+                                预览
+                            </button>
+                            <button class="report-action-btn primary">
+                                <i class="fas fa-download"></i>
+                                下载
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="report-card">
+                        <div class="report-preview">
+                            <span class="report-type-badge pdf">PDF</span>
+                            <i class="fas fa-file-pdf report-preview-icon"></i>
+                        </div>
+                        <div class="report-content">
+                            <h3 class="report-title">
+                                <i class="fas fa-viruses"></i>
+                                变异检测汇总报告
+                            </h3>
+                            <p class="report-meta">
+                                <i class="fas fa-folder"></i> 全基因组测序分析
+                                <span style="margin-left: 12px;">2026-05-05</span>
+                            </p>
+                            <div class="report-stats">
+                                <span class="report-stat">
+                                    <i class="fas fa-file"></i>
+                                    8 页
+                                </span>
+                                <span class="report-stat">
+                                    <i class="fas fa-database"></i>
+                                    1.2 MB
+                                </span>
+                            </div>
+                        </div>
+                        <div class="report-actions">
+                            <button class="report-action-btn secondary">
+                                <i class="fas fa-eye"></i>
+                                预览
+                            </button>
+                            <button class="report-action-btn primary">
+                                <i class="fas fa-download"></i>
+                                下载
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="report-card">
+                        <div class="report-preview">
+                            <span class="report-type-badge docx">DOCX</span>
+                            <i class="fas fa-file-word report-preview-icon"></i>
+                        </div>
+                        <div class="report-content">
+                            <h3 class="report-title">
+                                <i class="fas fa-clipboard-list"></i>
+                                项目进度报告
+                            </h3>
+                            <p class="report-meta">
+                                <i class="fas fa-folder"></i> 全基因组测序分析
+                                <span style="margin-left: 12px;">2026-04-28</span>
+                            </p>
+                            <div class="report-stats">
+                                <span class="report-stat">
+                                    <i class="fas fa-file"></i>
+                                    15 页
+                                </span>
+                                <span class="report-stat">
+                                    <i class="fas fa-database"></i>
+                                    3.1 MB
+                                </span>
+                            </div>
+                        </div>
+                        <div class="report-actions">
+                            <button class="report-action-btn secondary">
+                                <i class="fas fa-eye"></i>
+                                预览
+                            </button>
+                            <button class="report-action-btn primary">
+                                <i class="fas fa-download"></i>
+                                下载
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 演示数据提示 -->
+    <div class="demo-indicator">
+        <i class="fas fa-info-circle"></i>
+        <span>报告中心演示模式 - 使用模拟数据</span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

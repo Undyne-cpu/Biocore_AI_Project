@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - BioCore 生物信息分析平台</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Auth Page Base */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            background: var(--bg-dark);
+        }
+
+        .auth-left {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-left::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+        }
+
+        .auth-brand {
+            text-align: center;
+            z-index: 1;
+        }
+
+        .auth-brand-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+        }
+
+        .auth-brand-logo svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .auth-brand h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .auth-brand p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 400px;
+        }
+
+        .auth-features {
+            margin-top: 60px;
+            z-index: 1;
+        }
+
+        .auth-feature {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .auth-feature-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .auth-card h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .auth-card .subtitle {
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius-sm);
+            padding: 14px 14px 14px 44px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .input-wrapper input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .password-toggle:hover {
+            color: var(--text-secondary);
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .remember-me input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+        }
+
+        .remember-me span {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .forgot-link {
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 14px;
+            font-size: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-auth:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-loading .btn-text {
+            display: none;
+        }
+
+        .btn-loading .btn-loader {
+            display: block;
+        }
+
+        .btn-loader {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 28px 0;
+            gap: 16px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .social-login {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .btn-social {
+            flex: 1;
+            padding: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius-sm);
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-social span {
+            font-size: 0.85rem;
+        }
+
+        .btn-social:hover {
+            background: var(--bg-hover);
+            border-color: var(--border-light);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .auth-footer a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: var(--border-radius-sm);
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            color: var(--danger);
+            font-size: 0.9rem;
+        }
+
+        .error-message.show {
+            display: flex;
+        }
+
+        .error-message i {
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 1024px) {
+            .auth-left {
+                display: none;
+            }
+            .auth-right {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <!-- 左侧品牌区 -->
+        <div class="auth-left">
+            <div class="auth-brand">
+                <div class="auth-brand-logo">
+                    <svg viewBox="0 0 80 80" fill="none">
+                        <circle cx="40" cy="40" r="36" stroke="rgba(255,255,255,0.3)" stroke-width="4"/>
+                        <path d="M24 40 Q32 28, 40 40 T56 40" stroke="#00D4AA" stroke-width="3" fill="none"/>
+                        <circle cx="28" cy="36" r="4" fill="#00D4AA"/>
+                        <circle cx="52" cy="36" r="4" fill="#00D4AA"/>
+                        <path d="M30 50 Q40 56, 50 50" stroke="#00D4AA" stroke-width="3" fill="none"/>
+                    </svg>
+                </div>
+                <h1>BioCore</h1>
+                <p>一站式生物信息分析平台，让数据分析更简单高效</p>
+            </div>
+            <div class="auth-features">
+                <div class="auth-feature">
+                    <div class="auth-feature-icon">
+                        <i class="fas fa-dna"></i>
+                    </div>
+                    <span>支持 WGS、RNA-seq、ChIP-seq 等多种分析</span>
+                </div>
+                <div class="auth-feature">
+                    <div class="auth-feature-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <span>可视化工作流设计，拖拽即可完成复杂分析</span>
+                </div>
+                <div class="auth-feature">
+                    <div class="auth-feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <span>专业级可视化，结果报告一键导出</span>
+                </div>
+                <div class="auth-feature">
+                    <div class="auth-feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <span>团队协作，数据共享与权限管理</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧登录表单 -->
+        <div class="auth-right">
+            <div class="auth-card">
+                <h2>欢迎回来</h2>
+                <p class="subtitle">登录您的 BioCore 账户</p>
+
+                <div class="error-message" id="errorMessage">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="errorText">用户名或密码错误</span>
+                </div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>邮箱地址</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input type="email" id="email" placeholder="请输入邮箱" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>密码</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="password" placeholder="请输入密码" required>
+                            <button type="button" class="password-toggle" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" id="rememberMe">
+                            <span>记住我</span>
+                        </label>
+                        <a href="#" class="forgot-link">忘记密码？</a>
+                    </div>
+
+                    <button type="submit" class="btn-auth" id="loginBtn">
+                        <span class="btn-text">登 录</span>
+                        <div class="btn-loader"></div>
+                    </button>
+                </form>
+
+                <div class="divider">
+                    <span>或</span>
+                </div>
+
+                <div class="social-login">
+                    <button class="btn-social">
+                        <i class="fab fa-google"></i>
+                        <span>Google</span>
+                    </button>
+                    <button class="btn-social">
+                        <i class="fab fa-github"></i>
+                        <span>GitHub</span>
+                    </button>
+                    <button class="btn-social">
+                        <i class="fas fa-school"></i>
+                        <span>学术</span>
+                    </button>
+                </div>
+
+                <p class="auth-footer">
+                    还没有账户？<a href="register.html">立即注册</a>
+                </p>
+                
+                <!-- 开发模式演示按钮 -->
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);">
+                    <button type="button" class="btn-demo" id="demoBtn" onclick="enterDevMode()" style="width: 100%; padding: 12px; background: var(--bg-hover); border: 1px dashed var(--border); border-radius: 6px; color: var(--text-muted); cursor: pointer; font-size: 0.85rem;">
+                        <i class="fas fa-play-circle"></i> 开发模式演示（跳过登录）
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // 开发模式快速登录
+        function enterDevMode() {
+            localStorage.setItem('biocore_dev_mode', 'true');
+            localStorage.setItem('biocore_user', JSON.stringify({
+                loggedIn: true,
+                name: '演示用户',
+                email: 'demo@biocore.local',
+                role: '研究人员'
+            }));
+            window.location.href = 'index.html';
+        }
+        
+        // 登录页面逻辑
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+
+            // 密码显示/隐藏
+            togglePassword.addEventListener('click', () => {
+                const type = passwordInput.type === 'password' ? 'text' : 'password';
+                passwordInput.type = type;
+                togglePassword.innerHTML = type === 'password' 
+                    ? '<i class="fas fa-eye"></i>' 
+                    : '<i class="fas fa-eye-slash"></i>';
+            });
+
+            // 模拟用户数据
+            const mockUsers = [
+                { email: 'demo@biocore.com', password: 'demo123', name: '李博士' },
+                { email: 'admin@biocore.com', password: 'admin123', name: '管理员' },
+                { email: 'researcher@biocore.com', password: 'research123', name: '张研究员' }
+            ];
+
+            // 表单提交
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                // 显示加载状态
+                loginBtn.classList.add('btn-loading');
+                loginBtn.disabled = true;
+                errorMessage.classList.remove('show');
+                
+                // 模拟登录请求
+                setTimeout(() => {
+                    const user = mockUsers.find(u => u.email === email && u.password === password);
+                    
+                    loginBtn.classList.remove('btn-loading');
+                    loginBtn.disabled = false;
+                    
+                    if (user) {
+                        // 保存登录状态
+                        localStorage.setItem('biocore_user', JSON.stringify({
+                            email: user.email,
+                            name: user.name,
+                            loggedIn: true,
+                            loginTime: new Date().toISOString()
+                        }));
+                        
+                        // 显示成功提示
+                        showNotification(`欢迎回来，${user.name}！`, 'success');
+                        
+                        // 跳转到首页
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 500);
+                    } else {
+                        // 显示错误
+                        errorText.textContent = '邮箱或密码错误，请重试';
+                        errorMessage.classList.add('show');
+                    }
+                }, 1500);
+            });
+
+            // 检查是否已登录
+            const userData = localStorage.getItem('biocore_user');
+            if (userData) {
+                const user = JSON.parse(userData);
+                if (user.loggedIn) {
+                    // 已登录，跳转到首页
+                    window.location.href = 'index.html';
+                }
+            }
+        });
+
+        </script>
+</body>
+</html>
