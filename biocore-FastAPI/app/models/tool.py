@@ -19,3 +19,9 @@ class Tool(Base, BaseModel):
     genomes: Mapped[list | None] = mapped_column(JSON, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     usage_count: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Docker-specific fields
+    image_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    command_template: Mapped[str | None] = mapped_column(Text, nullable=True)
+    default_params: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    input_path_prefix: Mapped[str | None] = mapped_column(String(255), nullable=True)

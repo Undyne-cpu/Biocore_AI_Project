@@ -24,6 +24,7 @@ class ToolDetailResponse(BaseModel):
     version: str
     parameters: Optional[list] = None
     genomes: Optional[list] = None
+    input_path_prefix: Optional[str] = None
 
 
 class ToolRunRequest(BaseModel):

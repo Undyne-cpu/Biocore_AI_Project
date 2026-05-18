@@ -140,6 +140,7 @@ export interface DataFile {
   format: DataFileFormat
   md5?: string
   path?: string
+  minio_path?: string  // 上传后返回的完整 MinIO 路径，如 "input/projects/xxx/data/sample.fastq"
   uploadTime: string
   status: DataFileStatus
   description?: string
@@ -166,22 +167,16 @@ export interface Tool {
 }
 
 export interface ToolDetail extends Tool {
-  parameters: ToolParameter[]
+  parameters: Record<string, string>
   genomes: string[]
-}
-
-export interface ToolParameter {
-  name: string
-  label: string
-  type: 'string' | 'number' | 'boolean' | 'select'
-  default?: any
-  options?: string[]
+  input_path_prefix?: string  // MinIO 输入路径前缀，如 "input/projects/"
 }
 
 export interface RunToolParams {
   projectId: string
   inputFiles: string[]
   parameters?: Record<string, any>
+  extraParams?: string
 }
 
 export interface ToolRunResponse {
@@ -270,6 +265,15 @@ export interface Result {
   status: ResultStatus
   createdAt: string
   duration?: string
+}
+
+export interface ResultDetail extends Result {
+  taskId?: string
+  output_files?: string[]
+  logs?: string
+  error?: string
+  parameters?: Record<string, any>
+  inputFiles?: string[]
 }
 
 // ============ 报告模块 ============

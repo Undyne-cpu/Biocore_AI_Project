@@ -38,6 +38,54 @@ async def get_result(
     return success_response(result)
 
 
+@router.get("/{result_id}/files")
+async def get_result_files(
+    result_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """获取结果文件列表，提供可访问的URL"""
+    from app.core.config import get_settings
+    from app.tools.minio_client import MinIOClient
+
+    service = ResultService(db)
+    result = service.get_result(result_id)
+
+    if not result.files:
+        return success_response({"files": []})
+
+    settings = get_settings()
+    minio_client = MinIOClient(
+        endpoint=settings.MINIO_ENDPOINT,
+        access_key=settings.MINIO_ACCESS_KEY,
+        secret_key=settings.MINIO_SECRET_KEY,
+        bucket=settings.MINIO_BUCKET,
+        secure=settings.MINIO_SECURE
+    )
+
+    files_with_urls = []
+    for i, file_path in enumerate(result.files):
+        try:
+            url = minio_client.get_presigned_url(file_path, expires_hours=24)
+            files_with_urls.append({
+                "index": i,
+                "name": file_path.split("/")[-1],
+                "path": file_path,
+                "url": url,
+                "type": "html" if file_path.endswith(".html") else "zip" if file_path.endswith(".zip") else "other"
+            })
+        except Exception:
+            files_with_urls.append({
+                "index": i,
+                "name": file_path.split("/")[-1],
+                "path": file_path,
+                "url": None,
+                "type": "other"
+            })
+
+    return success_response({"files": files_with_urls})
+
+
 @router.get("/{result_id}/download")
 async def download_result(
     result_id: str,

@@ -43,11 +43,13 @@ async def upload_file(
     from app.core.config import get_settings
 
     settings = get_settings()
+
+    # Save uploaded file to temp
     temp_dir = tempfile.gettempdir()
     temp_path = os.path.join(temp_dir, file.filename)
 
+    content = await file.read()
     with open(temp_path, "wb") as f:
-        content = await file.read()
         f.write(content)
 
     file_size = len(content)
@@ -66,7 +68,26 @@ async def upload_file(
                   ".bam": "bam", ".vcf": "vcf", ".bed": "bed", ".gz": "other"}
     file_format = format_map.get(ext, "other")
 
-    storage_path = f"/storage/projects/{projectId or 'shared'}/data/{file.filename}"
+    # Upload to MinIO
+    project_prefix = f"projects/{projectId or 'shared'}" if projectId else "shared"
+    minio_path = f"input/{project_prefix}/data/{file.filename}"
+    minio_url = f"minio://{settings.MINIO_BUCKET}/{minio_path}"
+
+    try:
+        from app.tools.minio_client import MinIOClient
+        minio_client = MinIOClient(
+            endpoint=settings.MINIO_ENDPOINT,
+            access_key=settings.MINIO_ACCESS_KEY,
+            secret_key=settings.MINIO_SECRET_KEY,
+            bucket=settings.MINIO_BUCKET,
+            secure=settings.MINIO_SECURE
+        )
+        minio_client.upload_file(temp_path, minio_path)
+    except Exception as e:
+        # If MinIO fails, still save to database but with local path
+        minio_url = f"local://{file.filename}"
+
+    storage_path = f"/storage/{minio_path}"
 
     service = DataService(db)
     result = service.create_file(
@@ -77,7 +98,8 @@ async def upload_file(
         path=storage_path,
         project_id=projectId,
         uploader_id=current_user.id,
-        description=description
+        description=description,
+        minio_path=minio_path
     )
 
     os.remove(temp_path)

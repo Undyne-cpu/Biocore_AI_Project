@@ -67,7 +67,8 @@ class DataService:
 
     def create_file(self, name: str, file_type: str, format: str, size: str,
                     path: str, project_id: Optional[str] = None,
-                    uploader_id: str = None, description: Optional[str] = None) -> DataFileUploadResponse:
+                    uploader_id: str = None, description: Optional[str] = None,
+                    minio_path: Optional[str] = None) -> DataFileUploadResponse:
         file = DataFile(
             id=BaseModel.generate_id("file"),
             name=name,
@@ -88,7 +89,8 @@ class DataService:
             name=file.name,
             size=file.size,
             format=file.format,
-            status=file.status
+            status=file.status,
+            minio_path=minio_path
         )
 
     def delete_file(self, file_id: str, user_id: str):

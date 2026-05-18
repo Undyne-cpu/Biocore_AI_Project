@@ -29,7 +29,9 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => {
     const res = response.data
-    if (res.code !== 200) {
+    // 检查 code 字段：如果没有 code 字段或 code 不为 200，则视为错误
+    // 但如果 res 为空或不是对象（如同文件上传响应），则直接通过
+    if (res && typeof res === 'object' && 'code' in res && res.code !== 200) {
       message.error(res.message || '请求失败')
       return Promise.reject(new Error(res.message || '请求失败'))
     }

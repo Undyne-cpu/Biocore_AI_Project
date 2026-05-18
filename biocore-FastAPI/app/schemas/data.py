@@ -31,6 +31,7 @@ class DataFileUploadResponse(BaseModel):
     size: str
     format: str
     status: str
+    minio_path: Optional[str] = None
 
 
 class DataListResponse(BaseModel):
